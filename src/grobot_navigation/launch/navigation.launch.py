@@ -9,18 +9,19 @@ from launch.substitutions import (
 )
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from nav2_common.launch import LaunchConfigAsBool
 
 
 def generate_launch_description():
     namespace = LaunchConfiguration("namespace")
     map_file = LaunchConfiguration("map_file")
     params_file = LaunchConfiguration("params_file")
-    slam = LaunchConfiguration("slam")
-    use_sim_time = LaunchConfiguration("use_sim_time")
-    autostart = LaunchConfiguration("autostart")
-    use_composition = LaunchConfiguration("use_composition")
-    use_respawn = LaunchConfiguration("use_respawn")
-    rviz = LaunchConfiguration("rviz")
+    slam = LaunchConfigAsBool("slam")
+    use_sim_time = LaunchConfigAsBool("use_sim_time")
+    autostart = LaunchConfigAsBool("autostart")
+    use_composition = LaunchConfigAsBool("use_composition")
+    use_respawn = LaunchConfigAsBool("use_respawn")
+    rviz = LaunchConfigAsBool("rviz")
 
     default_map_file = PathJoinSubstitution(
         [EnvironmentVariable("HOME"), "GRobot", "maps", "hotel_test_map.yaml"]

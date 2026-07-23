@@ -5,6 +5,7 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 from ament_index_python.packages import get_package_share_directory
+from nav2_common.launch import LaunchConfigAsBool
 import os
 
 
@@ -17,7 +18,7 @@ def generate_launch_description():
     angle_anchor = LaunchConfiguration("angle_anchor")
     output_angle_min = LaunchConfiguration("output_angle_min")
     output_angle_max = LaunchConfiguration("output_angle_max")
-    rviz = LaunchConfiguration("rviz")
+    rviz = LaunchConfigAsBool("rviz")
 
     rviz_config_dir = os.path.join(
         get_package_share_directory("free_lidar"),

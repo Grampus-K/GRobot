@@ -3,6 +3,7 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
+from nav2_common.launch import LaunchConfigAsBool
 
 
 def generate_launch_description():
@@ -11,7 +12,7 @@ def generate_launch_description():
     lidar_y = LaunchConfiguration("lidar_y")
     lidar_z = LaunchConfiguration("lidar_z")
     lidar_yaw = LaunchConfiguration("lidar_yaw")
-    lidar_rviz = LaunchConfiguration("lidar_rviz")
+    lidar_rviz = LaunchConfigAsBool("lidar_rviz")
 
     description_launch = PathJoinSubstitution(
         [FindPackageShare("grobot_description"), "launch", "description.launch.py"]
