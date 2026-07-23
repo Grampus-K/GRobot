@@ -332,6 +332,8 @@ ros2 launch grobot_navigation navigation.launch.py rviz:=false
 
 说明一下：`grobot_description` 里同时提供了 `base_link` 和 `base_footprint`，其中 `base_footprint` 是 `base_link` 的固定子坐标系，主要是为了兼容 Nav2 的默认 frame 习惯。
 
+如果你手动改过 `slam` 参数，记得在这个启动里保持定位模式，不要传小写 `false`。当前默认已经是 `False`。
+
 ## 后续路线
 
 建议按下面顺序继续推进：

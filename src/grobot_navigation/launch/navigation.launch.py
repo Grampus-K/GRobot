@@ -54,7 +54,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "slam",
-                default_value="false",
+                default_value="False",
                 description="Run SLAM instead of localization",
             ),
             DeclareLaunchArgument(
