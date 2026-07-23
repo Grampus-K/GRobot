@@ -6,6 +6,7 @@
 - `grobot_odrive_base`：ODrive 差速底盘驱动，订阅 `/cmd_vel`，发布 `/odom` 和 `odom -> base_link`
 - `grobot_description`：机器人 URDF/xacro 描述，发布 `base_link -> scan` 等机器人静态坐标关系
 - `grobot_bringup`：统一启动机器人描述、底盘驱动和雷达驱动
+- `grobot_mapping`：基于 `slam_toolbox` 的手动建图启动和参数配置
 
 目标 TF 树：
 
@@ -13,7 +14,7 @@
 map -> odom -> base_link -> scan
 ```
 
-当前第一阶段先完成：
+当前已完成第一阶段：
 
 ```text
 odom -> base_link -> scan
@@ -91,7 +92,7 @@ sudo apt install -y \
 在 Ubuntu 上进入工作空间根目录：
 
 ```bash
-cd ~/GRobot_ws
+cd ~/GRobot
 colcon build --symlink-install
 source install/setup.bash
 ```
@@ -100,7 +101,7 @@ source install/setup.bash
 
 ```bash
 source /opt/ros/humble/setup.bash
-source ~/GRobot_ws/install/setup.bash
+source ~/GRobot/install/setup.bash
 ```
 
 ## 第一阶段：验证机器人坐标系
@@ -206,13 +207,86 @@ ros2 topic pub -r 20 /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.0}, angula
 
 停止发布后，底盘节点会在 `cmd_timeout` 超时后自动下发零速度。
 
+## 第二阶段：手动建图
+
+建图目标是让 `slam_toolbox` 根据 `/scan`、`odom -> base_link` 和 `base_link -> scan` 生成 `map -> odom`，形成完整 TF 树：
+
+```text
+map -> odom -> base_link -> scan
+```
+
+先启动机器人本体：
+
+```bash
+ros2 launch grobot_bringup robot.launch.py
+```
+
+另开一个终端启动建图：
+
+```bash
+source /opt/ros/humble/setup.bash
+source ~/GRobot/install/setup.bash
+ros2 launch grobot_mapping mapping.launch.py
+```
+
+如果机器人主机没有显示器，或者不想打开 RViz：
+
+```bash
+ros2 launch grobot_mapping mapping.launch.py rviz:=false
+```
+
+再开一个终端，用键盘遥控底盘慢速移动：
+
+```bash
+source /opt/ros/humble/setup.bash
+source ~/GRobot/install/setup.bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+```
+
+建图时建议：
+
+- 先在空旷区域低速直行、低速转弯
+- 沿墙或走廊慢慢走，不要快速原地旋转
+- 尽量闭环回到起点附近，让地图自动闭环
+- 如果地图明显扭曲，先停下来检查轮式里程计方向、雷达方向和 TF
+
+检查建图输出：
+
+```bash
+ros2 topic echo /map --once
+ros2 run tf2_ros tf2_echo map odom
+ros2 run tf2_ros tf2_echo odom base_link
+```
+
+保存地图：
+
+```bash
+mkdir -p ~/GRobot/maps
+ros2 run nav2_map_server map_saver_cli -f ~/GRobot/maps/hotel_test_map
+```
+
+保存成功后会生成：
+
+```text
+~/GRobot/maps/hotel_test_map.yaml
+~/GRobot/maps/hotel_test_map.pgm
+```
+
+这两个文件后续会给 Nav2 定位和导航使用。确认地图可用后，可以提交到 Git 仓库：
+
+```bash
+git add maps/hotel_test_map.yaml maps/hotel_test_map.pgm
+git commit -m "Add initial hotel test map"
+git push origin main
+```
+
 ## 后续路线
 
 建议按下面顺序继续推进：
 
 1. 完成 `grobot_description` 实物尺寸校准
 2. 使用 `grobot_bringup` 统一启动底盘、雷达和机器人描述
-3. 使用 `slam_toolbox` 手动建图并保存地图
+3. 使用 `grobot_mapping` 和 `slam_toolbox` 手动建图并保存地图
 4. 新增 `grobot_navigation`，维护 Nav2 参数和导航 launch
 5. 使用 RViz 测试单点导航
 6. 使用 Nav2 `FollowWaypoints` 做简单航点任务
