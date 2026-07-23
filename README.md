@@ -330,6 +330,8 @@ ros2 launch grobot_navigation navigation.launch.py rviz:=false
 
 如果后续要做航点任务，可以先用多个 `Nav2 Goal` 验证路径规划和避障，再进入 `FollowWaypoints`。
 
+说明一下：`grobot_description` 里同时提供了 `base_link` 和 `base_footprint`，其中 `base_footprint` 是 `base_link` 的固定子坐标系，主要是为了兼容 Nav2 的默认 frame 习惯。
+
 ## 后续路线
 
 建议按下面顺序继续推进：

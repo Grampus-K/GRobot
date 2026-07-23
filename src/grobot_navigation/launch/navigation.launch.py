@@ -9,16 +9,17 @@ from launch.substitutions import (
 )
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-from nav2_common.launch import RewrittenYaml
 
 
 def generate_launch_description():
     namespace = LaunchConfiguration("namespace")
     map_file = LaunchConfiguration("map_file")
     params_file = LaunchConfiguration("params_file")
+    slam = LaunchConfiguration("slam")
     use_sim_time = LaunchConfiguration("use_sim_time")
     autostart = LaunchConfiguration("autostart")
     use_composition = LaunchConfiguration("use_composition")
+    use_respawn = LaunchConfiguration("use_respawn")
     rviz = LaunchConfiguration("rviz")
 
     default_map_file = PathJoinSubstitution(
@@ -32,20 +33,6 @@ def generate_launch_description():
     )
     bringup_launch_file = PathJoinSubstitution(
         [FindPackageShare("nav2_bringup"), "launch", "bringup_launch.py"]
-    )
-
-    configured_params = RewrittenYaml(
-        source_file=params_file,
-        root_key=namespace,
-        param_rewrites={
-            "use_sim_time": use_sim_time,
-            "base_frame_id": "base_link",
-            "robot_base_frame": "base_link",
-            "odom_frame_id": "odom",
-            "global_frame_id": "map",
-            "scan_topic": "/scan",
-        },
-        convert_types=True,
     )
 
     return LaunchDescription(
@@ -66,6 +53,11 @@ def generate_launch_description():
                 description="Path to the Nav2 parameter file",
             ),
             DeclareLaunchArgument(
+                "slam",
+                default_value="false",
+                description="Run SLAM instead of localization",
+            ),
+            DeclareLaunchArgument(
                 "use_sim_time",
                 default_value="false",
                 description="Use simulation clock if true",
@@ -81,6 +73,11 @@ def generate_launch_description():
                 description="Use component composition if true",
             ),
             DeclareLaunchArgument(
+                "use_respawn",
+                default_value="false",
+                description="Respawn nodes if they crash",
+            ),
+            DeclareLaunchArgument(
                 "rviz",
                 default_value="true",
                 description="Start RViz with the Nav2 display config",
@@ -90,10 +87,12 @@ def generate_launch_description():
                 launch_arguments={
                     "namespace": namespace,
                     "map": map_file,
+                    "slam": slam,
                     "use_sim_time": use_sim_time,
-                    "params_file": configured_params,
+                    "params_file": params_file,
                     "autostart": autostart,
                     "use_composition": use_composition,
+                    "use_respawn": use_respawn,
                 }.items(),
             ),
             Node(
