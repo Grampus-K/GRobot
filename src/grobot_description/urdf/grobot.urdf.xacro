@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="grobot">
+  <xacro:arg name="base_length" default="0.60"/>
+  <xacro:arg name="base_width" default="0.45"/>
+  <xacro:arg name="base_height" default="0.18"/>
+  <xacro:arg name="wheel_radius" default="0.085"/>
+  <xacro:arg name="wheel_width" default="0.045"/>
+  <xacro:arg name="track_width" default="0.375"/>
+  <xacro:arg name="lidar_x" default="0.0"/>
+  <xacro:arg name="lidar_y" default="0.0"/>
+  <xacro:arg name="lidar_z" default="0.20"/>
+  <xacro:arg name="lidar_yaw" default="0.0"/>
+
+  <xacro:property name="base_length" value="${float('$(arg base_length)')}"/>
+  <xacro:property name="base_width" value="${float('$(arg base_width)')}"/>
+  <xacro:property name="base_height" value="${float('$(arg base_height)')}"/>
+  <xacro:property name="wheel_radius" value="${float('$(arg wheel_radius)')}"/>
+  <xacro:property name="wheel_width" value="${float('$(arg wheel_width)')}"/>
+  <xacro:property name="track_width" value="${float('$(arg track_width)')}"/>
+  <xacro:property name="lidar_x" value="${float('$(arg lidar_x)')}"/>
+  <xacro:property name="lidar_y" value="${float('$(arg lidar_y)')}"/>
+  <xacro:property name="lidar_z" value="${float('$(arg lidar_z)')}"/>
+  <xacro:property name="lidar_yaw" value="${float('$(arg lidar_yaw)')}"/>
+
+  <material name="body_gray">
+    <color rgba="0.35 0.38 0.42 1.0"/>
+  </material>
+  <material name="wheel_black">
+    <color rgba="0.03 0.03 0.03 1.0"/>
+  </material>
+  <material name="lidar_blue">
+    <color rgba="0.05 0.25 0.75 1.0"/>
+  </material>
+
+  <link name="base_footprint"/>
+
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+      <material name="body_gray"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="left_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="wheel_black"/>
+    </visual>
+  </link>
+
+  <joint name="left_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <origin xyz="0 ${track_width / 2.0} 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="right_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="wheel_black"/>
+    </visual>
+  </link>
+
+  <joint name="right_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
+    <origin xyz="0 ${-track_width / 2.0} 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="scan">
+    <visual>
+      <origin xyz="0 0 0.025" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.045" length="0.05"/>
+      </geometry>
+      <material name="lidar_blue"/>
+    </visual>
+  </link>
+
+  <joint name="scan_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="scan"/>
+    <origin xyz="${lidar_x} ${lidar_y} ${lidar_z}" rpy="0 0 ${lidar_yaw}"/>
+  </joint>
+</robot>
