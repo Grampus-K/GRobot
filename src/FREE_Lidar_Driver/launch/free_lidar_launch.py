@@ -1,5 +1,6 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
+from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
@@ -16,6 +17,7 @@ def generate_launch_description():
     angle_anchor = LaunchConfiguration("angle_anchor")
     output_angle_min = LaunchConfiguration("output_angle_min")
     output_angle_max = LaunchConfiguration("output_angle_max")
+    rviz = LaunchConfiguration("rviz")
 
     rviz_config_dir = os.path.join(
         get_package_share_directory("free_lidar"),
@@ -64,6 +66,11 @@ def generate_launch_description():
             default_value="120.0",
             description="Maximum published angle in ROS coordinates, degrees",
         ),
+        DeclareLaunchArgument(
+            "rviz",
+            default_value="true",
+            description="Start RViz with the lidar display config",
+        ),
         Node(
             package="free_lidar",
             executable="free_lidar_node",
@@ -98,5 +105,6 @@ def generate_launch_description():
             name="rviz2",
             arguments=["-d", rviz_config_dir],
             output="screen",
+            condition=IfCondition(rviz),
         ),
     ])

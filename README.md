@@ -5,6 +5,7 @@
 - `free_lidar`：FREE 系列单线激光雷达驱动，发布 `/scan`
 - `grobot_odrive_base`：ODrive 差速底盘驱动，订阅 `/cmd_vel`，发布 `/odom` 和 `odom -> base_link`
 - `grobot_description`：机器人 URDF/xacro 描述，发布 `base_link -> scan` 等机器人静态坐标关系
+- `grobot_bringup`：统一启动机器人描述、底盘驱动和雷达驱动
 
 目标 TF 树：
 
@@ -133,7 +134,38 @@ ros2 launch grobot_description description.launch.py lidar_x:=0.10 lidar_y:=0.0 
 
 ## 第一阶段：联合启动底盘和雷达
 
-分别启动底盘、雷达和机器人描述：
+推荐使用统一启动入口：
+
+```bash
+ros2 launch grobot_bringup robot.launch.py
+```
+
+这个 launch 会同时启动：
+
+- `grobot_description`
+- `grobot_odrive_base`
+- `free_lidar`
+
+如果雷达 IP 不是默认的 `192.168.10.7`，可以这样指定：
+
+```bash
+ros2 launch grobot_bringup robot.launch.py scanner_ip:=192.168.10.7
+```
+
+如果要临时调整雷达相对 `base_link` 的安装位置：
+
+```bash
+ros2 launch grobot_bringup robot.launch.py lidar_x:=0.10 lidar_y:=0.0 lidar_z:=0.22 lidar_yaw:=0.0
+```
+
+如果需要同时打开雷达 RViz 调试界面：
+
+```bash
+ros2 launch grobot_bringup robot.launch.py lidar_rviz:=true
+```
+
+也可以分别启动底盘、雷达和机器人描述：
+
 
 ```bash
 ros2 launch grobot_odrive_base odrive_base.launch.py
@@ -179,9 +211,8 @@ ros2 topic pub -r 20 /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.0}, angula
 建议按下面顺序继续推进：
 
 1. 完成 `grobot_description` 实物尺寸校准
-2. 新增 `grobot_bringup`，统一启动底盘、雷达和机器人描述
+2. 使用 `grobot_bringup` 统一启动底盘、雷达和机器人描述
 3. 使用 `slam_toolbox` 手动建图并保存地图
 4. 新增 `grobot_navigation`，维护 Nav2 参数和导航 launch
 5. 使用 RViz 测试单点导航
 6. 使用 Nav2 `FollowWaypoints` 做简单航点任务
-
