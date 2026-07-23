@@ -334,6 +334,8 @@ ros2 launch grobot_navigation navigation.launch.py rviz:=false
 
 如果你手动改过 `slam` 参数，记得在这个启动里保持定位模式，不要传小写 `false`。当前默认已经是 `False`。
 
+`use_composition` 和 `use_respawn` 也保持大写布尔默认值，和 Humble 的 Nav2 启动脚本一致。
+
 ## 后续路线
 
 建议按下面顺序继续推进：

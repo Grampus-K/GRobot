@@ -69,12 +69,12 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "use_composition",
-                default_value="false",
+                default_value="False",
                 description="Use component composition if true",
             ),
             DeclareLaunchArgument(
                 "use_respawn",
-                default_value="false",
+                default_value="False",
                 description="Respawn nodes if they crash",
             ),
             DeclareLaunchArgument(
