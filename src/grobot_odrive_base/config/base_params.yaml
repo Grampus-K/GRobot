@@ -1,0 +1,32 @@
+odrive_base_node:
+  ros__parameters:
+    # Your measured chassis geometry.
+    wheel_diameter: 0.17
+    track_width: 0.375
+
+    # axis1 is left wheel. Positive input_vel drives it forward.
+    left_axis: 1
+    left_cmd_sign: 1.0
+    left_feedback_sign: 1.0
+
+    # axis0 is right wheel. Positive input_vel drives it backward.
+    right_axis: 0
+    right_cmd_sign: -1.0
+    right_feedback_sign: -1.0
+
+    # Conservative software limit for early indoor testing.
+    max_wheel_turn_s: 2.0
+    cmd_timeout: 0.5
+    control_rate_hz: 50.0
+    error_check_rate_hz: 2.0
+
+    # ODrive safety checks for your 24V battery system.
+    min_bus_voltage: 21.5
+    max_bus_voltage: 31.0
+    connect_timeout: 10.0
+    enter_closed_loop_on_start: true
+    idle_on_shutdown: true
+
+    odom_frame: odom
+    base_frame: base_link
+    publish_tf: true

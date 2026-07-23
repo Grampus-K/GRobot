@@ -1,0 +1,21 @@
+# ROS 2 / colcon build outputs
+build/
+install/
+log/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Editor and OS noise
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+
+# Misc runtime artifacts
+*.bag
+*.db3
+*.sqlite3
