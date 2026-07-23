@@ -285,7 +285,7 @@ bool FreeLidarNode::getScanData()
         
         scanmsg.header.frame_id = frame_id_;
         //时间戳赋予时间提前        
-        rclcpp::Time time(scandata.sec, scandata.nsec);
+        rclcpp::Time time = this->now();
         scanmsg.header.stamp = time;
        // scanmsg.header.seq=(uint32_t)scandata.frame_seq;
 

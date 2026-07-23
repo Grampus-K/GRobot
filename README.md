@@ -280,6 +280,15 @@ git commit -m "Add initial hotel test map"
 git push origin main
 ```
 
+如果 `slam_toolbox` 一直提示类似下面的消息：
+
+```text
+Message Filter dropping message: frame 'scan' ...
+the timestamp on the message is earlier than all the data in the transform cache
+```
+
+优先检查雷达驱动是否使用当前 ROS 时间发布 `/scan`，然后重新 `colcon build` 并重新启动建图。
+
 ## 后续路线
 
 建议按下面顺序继续推进：
