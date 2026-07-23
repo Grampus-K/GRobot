@@ -7,6 +7,7 @@
 - `grobot_description`：机器人 URDF/xacro 描述，发布 `base_link -> scan` 等机器人静态坐标关系
 - `grobot_bringup`：统一启动机器人描述、底盘驱动和雷达驱动
 - `grobot_mapping`：基于 `slam_toolbox` 的手动建图启动和参数配置
+- `grobot_navigation`：基于 Nav2 的定位和自主导航启动
 
 目标 TF 树：
 
@@ -289,6 +290,46 @@ the timestamp on the message is earlier than all the data in the transform cache
 
 优先检查雷达驱动是否使用当前 ROS 时间发布 `/scan`，然后重新 `colcon build` 并重新启动建图。
 
+## 第三阶段：定位和导航
+
+保存好地图后，启动导航：
+
+```bash
+ros2 launch grobot_navigation navigation.launch.py
+```
+
+默认会读取：
+
+```text
+~/GRobot/maps/hotel_test_map.yaml
+```
+
+如果你的地图文件在别的路径：
+
+```bash
+ros2 launch grobot_navigation navigation.launch.py map_file:=/path/to/your_map.yaml
+```
+
+推荐启动顺序：
+
+```bash
+ros2 launch grobot_bringup robot.launch.py
+ros2 launch grobot_navigation navigation.launch.py
+```
+
+打开 RViz 后先做两件事：
+
+1. 用 `2D Pose Estimate` 设定机器人初始位姿
+2. 用 `Nav2 Goal` 点一个目标点测试导航
+
+如果要关掉 RViz：
+
+```bash
+ros2 launch grobot_navigation navigation.launch.py rviz:=false
+```
+
+如果后续要做航点任务，可以先用多个 `Nav2 Goal` 验证路径规划和避障，再进入 `FollowWaypoints`。
+
 ## 后续路线
 
 建议按下面顺序继续推进：
@@ -296,6 +337,6 @@ the timestamp on the message is earlier than all the data in the transform cache
 1. 完成 `grobot_description` 实物尺寸校准
 2. 使用 `grobot_bringup` 统一启动底盘、雷达和机器人描述
 3. 使用 `grobot_mapping` 和 `slam_toolbox` 手动建图并保存地图
-4. 新增 `grobot_navigation`，维护 Nav2 参数和导航 launch
+4. 使用 `grobot_navigation` 做定位和单点导航测试
 5. 使用 RViz 测试单点导航
 6. 使用 Nav2 `FollowWaypoints` 做简单航点任务
