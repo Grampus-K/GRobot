@@ -28,7 +28,7 @@ def generate_launch_description():
         [EnvironmentVariable("HOME"), "GRobot", "maps", "hotel_test_map.yaml"]
     )
     default_params_file = PathJoinSubstitution(
-        [FindPackageShare("nav2_bringup"), "params", "nav2_params.yaml"]
+        [FindPackageShare("grobot_navigation"), "config", "nav2_params.yaml"]
     )
     rviz_config_file = PathJoinSubstitution(
         [FindPackageShare("nav2_bringup"), "rviz", "nav2_default_view.rviz"]
@@ -95,7 +95,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "robot_radius",
-                default_value="0.2525",
+                default_value="0.26",
                 description="Circular robot radius used by Nav2 costmaps, meters",
             ),
             IncludeLaunchDescription(

@@ -28,7 +28,7 @@ odom -> base_link -> scan
 - 外形：圆形底盘
 - 外形直径：`0.505 m`
 - 底盘实际高度：`0.30 m`
-- Nav2 默认机器人半径：`0.2525 m`
+- Nav2 默认机器人半径：`0.26 m`
 - 轮子直径：`0.17 m`
 - 轮距：`0.375 m`
 - 轮子中心：位于 `base_link` 的 x 轴原点位置
@@ -348,7 +348,13 @@ ros2 launch grobot_navigation navigation.launch.py rviz:=false
 
 `use_composition` 和 `use_respawn` 也保持大写布尔默认值，和 Humble 的 Nav2 启动脚本一致。
 
-Nav2 默认使用圆形机器人模型，`grobot_navigation` 会把 `robot_radius` 覆盖成 `0.2525 m`。如果后续想额外留安全余量，可以启动时调大一些：
+Nav2 默认使用项目内参数文件：
+
+```text
+src/grobot_navigation/config/nav2_params.yaml
+```
+
+当前这份参数已经按实机低速测试做了保守限制，重点降低了差速底盘的角速度、角加速度和 DWB 朝向对齐权重，让机器人少一些频繁 yaw 修正。默认 `robot_radius` 是 `0.26 m`，比实测半径 `0.2525 m` 稍微留了一点余量。如果后续想额外留安全余量，可以启动时继续调大：
 
 ```bash
 ros2 launch grobot_navigation navigation.launch.py robot_radius:=0.28
