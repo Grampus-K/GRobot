@@ -354,7 +354,7 @@ Nav2 默认使用项目内参数文件：
 src/grobot_navigation/config/nav2_params.yaml
 ```
 
-当前这份参数已经按实机低速测试做了保守限制，重点降低了差速底盘的角速度、角加速度和 DWB 朝向对齐权重，让机器人少一些频繁 yaw 修正。默认 `robot_radius` 是 `0.26 m`，比实测半径 `0.2525 m` 稍微留了一点余量。如果后续想额外留安全余量，可以启动时继续调大：
+当前这份参数以 ROS2 Humble 的 Nav2 官方默认参数为基准，只把默认 `robot_radius` 改成 `0.26 m`，比实测半径 `0.2525 m` 稍微留了一点余量。如果后续想额外留安全余量，可以启动时继续调大：
 
 ```bash
 ros2 launch grobot_navigation navigation.launch.py robot_radius:=0.28
