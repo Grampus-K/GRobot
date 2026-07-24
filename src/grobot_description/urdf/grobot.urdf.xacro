@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="grobot">
   <xacro:arg name="base_diameter" default="0.505"/>
-  <xacro:arg name="base_height" default="0.18"/>
+  <xacro:arg name="base_height" default="0.30"/>
   <xacro:arg name="wheel_radius" default="0.085"/>
   <xacro:arg name="wheel_width" default="0.045"/>
   <xacro:arg name="track_width" default="0.375"/>

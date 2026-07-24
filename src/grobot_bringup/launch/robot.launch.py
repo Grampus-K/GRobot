@@ -8,6 +8,7 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
     scanner_ip = LaunchConfiguration("scanner_ip")
     base_diameter = LaunchConfiguration("base_diameter")
+    base_height = LaunchConfiguration("base_height")
     lidar_x = LaunchConfiguration("lidar_x")
     lidar_y = LaunchConfiguration("lidar_y")
     lidar_z = LaunchConfiguration("lidar_z")
@@ -35,6 +36,11 @@ def generate_launch_description():
                 "base_diameter",
                 default_value="0.505",
                 description="Circular robot outer diameter, meters",
+            ),
+            DeclareLaunchArgument(
+                "base_height",
+                default_value="0.30",
+                description="Robot base body height, meters",
             ),
             DeclareLaunchArgument(
                 "lidar_x",
@@ -65,6 +71,7 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource(description_launch),
                 launch_arguments={
                     "base_diameter": base_diameter,
+                    "base_height": base_height,
                     "lidar_x": lidar_x,
                     "lidar_y": lidar_y,
                     "lidar_z": lidar_z,

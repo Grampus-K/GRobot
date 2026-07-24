@@ -12,7 +12,7 @@ def generate_launch_description():
 
     declared_arguments = [
         DeclareLaunchArgument("base_diameter", default_value="0.505"),
-        DeclareLaunchArgument("base_height", default_value="0.18"),
+        DeclareLaunchArgument("base_height", default_value="0.30"),
         DeclareLaunchArgument("wheel_radius", default_value="0.085"),
         DeclareLaunchArgument("wheel_width", default_value="0.045"),
         DeclareLaunchArgument("track_width", default_value="0.375"),
