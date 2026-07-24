@@ -1,18 +1,17 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="grobot">
-  <xacro:arg name="base_length" default="0.60"/>
-  <xacro:arg name="base_width" default="0.45"/>
+  <xacro:arg name="base_diameter" default="0.505"/>
   <xacro:arg name="base_height" default="0.18"/>
   <xacro:arg name="wheel_radius" default="0.085"/>
   <xacro:arg name="wheel_width" default="0.045"/>
   <xacro:arg name="track_width" default="0.375"/>
-  <xacro:arg name="lidar_x" default="0.0"/>
+  <xacro:arg name="lidar_x" default="0.18"/>
   <xacro:arg name="lidar_y" default="0.0"/>
-  <xacro:arg name="lidar_z" default="0.20"/>
+  <xacro:arg name="lidar_z" default="0.05"/>
   <xacro:arg name="lidar_yaw" default="0.0"/>
 
-  <xacro:property name="base_length" value="${float('$(arg base_length)')}"/>
-  <xacro:property name="base_width" value="${float('$(arg base_width)')}"/>
+  <xacro:property name="base_diameter" value="${float('$(arg base_diameter)')}"/>
+  <xacro:property name="base_radius" value="${base_diameter / 2.0}"/>
   <xacro:property name="base_height" value="${float('$(arg base_height)')}"/>
   <xacro:property name="wheel_radius" value="${float('$(arg wheel_radius)')}"/>
   <xacro:property name="wheel_width" value="${float('$(arg wheel_width)')}"/>
@@ -36,14 +35,14 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <box size="${base_length} ${base_width} ${base_height}"/>
+        <cylinder radius="${base_radius}" length="${base_height}"/>
       </geometry>
       <material name="body_gray"/>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <box size="${base_length} ${base_width} ${base_height}"/>
+        <cylinder radius="${base_radius}" length="${base_height}"/>
       </geometry>
     </collision>
   </link>

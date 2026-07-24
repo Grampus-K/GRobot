@@ -9,6 +9,7 @@ from launch.substitutions import (
 )
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from nav2_common.launch import RewrittenYaml
 
 
 def generate_launch_description():
@@ -21,6 +22,7 @@ def generate_launch_description():
     use_composition = LaunchConfiguration("use_composition")
     use_respawn = LaunchConfiguration("use_respawn")
     rviz = LaunchConfiguration("rviz")
+    robot_radius = LaunchConfiguration("robot_radius")
 
     default_map_file = PathJoinSubstitution(
         [EnvironmentVariable("HOME"), "GRobot", "maps", "hotel_test_map.yaml"]
@@ -33,6 +35,15 @@ def generate_launch_description():
     )
     bringup_launch_file = PathJoinSubstitution(
         [FindPackageShare("nav2_bringup"), "launch", "bringup_launch.py"]
+    )
+
+    configured_params = RewrittenYaml(
+        source_file=params_file,
+        root_key=namespace,
+        param_rewrites={
+            "robot_radius": robot_radius,
+        },
+        convert_types=True,
     )
 
     return LaunchDescription(
@@ -82,6 +93,11 @@ def generate_launch_description():
                 default_value="true",
                 description="Start RViz with the Nav2 display config",
             ),
+            DeclareLaunchArgument(
+                "robot_radius",
+                default_value="0.2525",
+                description="Circular robot radius used by Nav2 costmaps, meters",
+            ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(bringup_launch_file),
                 launch_arguments={
@@ -89,7 +105,7 @@ def generate_launch_description():
                     "map": map_file,
                     "slam": slam,
                     "use_sim_time": use_sim_time,
-                    "params_file": params_file,
+                    "params_file": configured_params,
                     "autostart": autostart,
                     "use_composition": use_composition,
                     "use_respawn": use_respawn,

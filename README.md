@@ -23,6 +23,16 @@ odom -> base_link -> scan
 
 其中 `map -> odom` 后续由 SLAM 或 AMCL/Nav2 提供。
 
+## 机器人实测参数
+
+- 外形：圆形底盘
+- 外形直径：`0.505 m`
+- Nav2 默认机器人半径：`0.2525 m`
+- 轮子直径：`0.17 m`
+- 轮距：`0.375 m`
+- 雷达相对 `base_link` 的位置：`x=0.18 m`，`y=0.0 m`，`z=0.05 m`
+- 雷达相对 `base_link` 的偏航角：`0.0 rad`
+
 ## Ubuntu 22.04 / ROS2 Humble 环境
 
 先确保已经安装 ROS2 Humble，并加载 ROS 环境：
@@ -121,15 +131,15 @@ ros2 run tf2_ros tf2_echo base_link scan
 
 默认雷达安装参数：
 
-- `lidar_x: 0.0`
+- `lidar_x: 0.18`
 - `lidar_y: 0.0`
-- `lidar_z: 0.20`
+- `lidar_z: 0.05`
 - `lidar_yaw: 0.0`
 
-如果实物雷达不在底盘中心，可以通过 launch 参数临时调整：
+如果后续重新测量了雷达安装位置，可以通过 launch 参数临时覆盖：
 
 ```bash
-ros2 launch grobot_description description.launch.py lidar_x:=0.10 lidar_y:=0.0 lidar_z:=0.22 lidar_yaw:=0.0
+ros2 launch grobot_description description.launch.py lidar_x:=0.18 lidar_y:=0.0 lidar_z:=0.05 lidar_yaw:=0.0
 ```
 
 确认实测位置后，再修改 `src/grobot_description/urdf/grobot.urdf.xacro` 里的默认值。
@@ -157,7 +167,7 @@ ros2 launch grobot_bringup robot.launch.py scanner_ip:=192.168.10.7
 如果要临时调整雷达相对 `base_link` 的安装位置：
 
 ```bash
-ros2 launch grobot_bringup robot.launch.py lidar_x:=0.10 lidar_y:=0.0 lidar_z:=0.22 lidar_yaw:=0.0
+ros2 launch grobot_bringup robot.launch.py lidar_x:=0.18 lidar_y:=0.0 lidar_z:=0.05 lidar_yaw:=0.0
 ```
 
 如果需要同时打开雷达 RViz 调试界面：
@@ -335,6 +345,12 @@ ros2 launch grobot_navigation navigation.launch.py rviz:=false
 如果你手动改过 `slam` 参数，记得在这个启动里保持定位模式，不要传小写 `false`。当前默认已经是 `False`。
 
 `use_composition` 和 `use_respawn` 也保持大写布尔默认值，和 Humble 的 Nav2 启动脚本一致。
+
+Nav2 默认使用圆形机器人模型，`grobot_navigation` 会把 `robot_radius` 覆盖成 `0.2525 m`。如果后续想额外留安全余量，可以启动时调大一些：
+
+```bash
+ros2 launch grobot_navigation navigation.launch.py robot_radius:=0.28
+```
 
 ## 后续路线
 

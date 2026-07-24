@@ -11,15 +11,14 @@ def generate_launch_description():
     )
 
     declared_arguments = [
-        DeclareLaunchArgument("base_length", default_value="0.60"),
-        DeclareLaunchArgument("base_width", default_value="0.45"),
+        DeclareLaunchArgument("base_diameter", default_value="0.505"),
         DeclareLaunchArgument("base_height", default_value="0.18"),
         DeclareLaunchArgument("wheel_radius", default_value="0.085"),
         DeclareLaunchArgument("wheel_width", default_value="0.045"),
         DeclareLaunchArgument("track_width", default_value="0.375"),
-        DeclareLaunchArgument("lidar_x", default_value="0.0"),
+        DeclareLaunchArgument("lidar_x", default_value="0.18"),
         DeclareLaunchArgument("lidar_y", default_value="0.0"),
-        DeclareLaunchArgument("lidar_z", default_value="0.20"),
+        DeclareLaunchArgument("lidar_z", default_value="0.05"),
         DeclareLaunchArgument("lidar_yaw", default_value="0.0"),
     ]
 
@@ -28,10 +27,8 @@ def generate_launch_description():
             [
                 "xacro ",
                 robot_description_file,
-                " base_length:=",
-                LaunchConfiguration("base_length"),
-                " base_width:=",
-                LaunchConfiguration("base_width"),
+                " base_diameter:=",
+                LaunchConfiguration("base_diameter"),
                 " base_height:=",
                 LaunchConfiguration("base_height"),
                 " wheel_radius:=",
