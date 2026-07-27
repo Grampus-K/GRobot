@@ -1,7 +1,7 @@
 odrive_base_node:
   ros__parameters:
     # Your measured chassis geometry.
-    wheel_diameter: 0.17
+    wheel_diameter: 0.1725
     track_width: 0.375
 
     # axis1 is left wheel. Positive input_vel drives it forward.

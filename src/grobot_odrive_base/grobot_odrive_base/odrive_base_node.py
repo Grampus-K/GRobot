@@ -76,7 +76,7 @@ class ODriveBaseNode(Node):
             raise
 
     def _declare_parameters(self) -> None:
-        self.declare_parameter("wheel_diameter", 0.17)
+        self.declare_parameter("wheel_diameter", 0.1725)
         self.declare_parameter("track_width", 0.375)
         self.declare_parameter("left_axis", 1)
         self.declare_parameter("right_axis", 0)
