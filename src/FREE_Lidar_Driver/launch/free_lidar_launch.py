@@ -107,6 +107,9 @@ def generate_launch_description():
                 "filter_switch": ParameterValue(filter_switch, value_type=int),
                 "cluster_num": 10,
                 "broad_filter_num": 20,
+                # 强度阈值过滤，默认关闭；现场用 RViz 观察玻璃区 /scan intensities 分布后再收紧（如 intensity_min 设 50 起步）
+                "intensity_min": 0.0,
+                "intensity_max": 65535.0,
                 "NOR_switch": 1,
                 "is_reverse_postion": False,
                 "topic_name": "/scan",

@@ -96,6 +96,8 @@ private:
     int NOR_switch_;
     int cluster_num_;
     int broad_filter_num_;
+    float intensity_min_;
+    float intensity_max_;
     int baud_;
 
     LidarDriver *driver_;

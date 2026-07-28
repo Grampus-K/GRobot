@@ -29,6 +29,8 @@ FreeLidarNode::FreeLidarNode():Node("free_lidar_node")
     this->declare_parameter<int>("filter_switch", 1);
     this->declare_parameter<int>("cluster_num", 3);
     this->declare_parameter<int>("broad_filter_num", 10);
+    this->declare_parameter<float>("intensity_min", 0.0);
+    this->declare_parameter<float>("intensity_max", 65535.0);
     
     this->declare_parameter<bool>("is_ethernet", true);
     this->declare_parameter<int>("NOR_switch", 0);
@@ -53,6 +55,8 @@ FreeLidarNode::FreeLidarNode():Node("free_lidar_node")
     this->get_parameter<int>("filter_switch", filter_switch_);
     this->get_parameter<int>("cluster_num", cluster_num_);
     this->get_parameter<int>("broad_filter_num", broad_filter_num_);
+    this->get_parameter<float>("intensity_min", intensity_min_);
+    this->get_parameter<float>("intensity_max", intensity_max_);
     this->get_parameter<bool>("is_ethernet", is_ethernet_);
     this->get_parameter<int>("offset_angle", offset_angle_);
     this->get_parameter<int>("NOR_switch", NOR_switch_);
@@ -284,8 +288,11 @@ bool FreeLidarNode::getScanData()
       
         
         scanmsg.header.frame_id = frame_id_;
-        //时间戳赋予时间提前        
-        rclcpp::Time time = this->now();
+        // 时间戳使用本帧首包接收时刻（最接近扫描起始时刻），消除解析/滤波带来的发布延迟；
+        // 若 recv_first_sec 为 0（字段未填充，如串口路径）则回退为当前时刻
+        rclcpp::Time time = (scandata.recv_first_sec != 0)
+            ? rclcpp::Time(scandata.recv_first_sec, scandata.recv_first_nsec)
+            : this->now();
         scanmsg.header.stamp = time;
        // scanmsg.header.seq=(uint32_t)scandata.frame_seq;
 
@@ -333,7 +340,15 @@ bool FreeLidarNode::getScanData()
     }
 }
         
-
+        // 强度阈值过滤：强度越界的点距离置为 inf（默认 0/65535 即关闭，行为与改前一致）。
+        // 注意：无回波点的强度已被置为 inf（1/0.0f），inf > intensity_max_ 会再次被置 inf，属无害幂等。
+        if (intensity_min_ > 0.0f || intensity_max_ < 65535.0f) {
+            for (std::size_t i = 0; i < scanmsg.ranges.size() && i < scanmsg.intensities.size(); i++) {
+                if (scanmsg.intensities[i] < intensity_min_ || scanmsg.intensities[i] > intensity_max_) {
+                    scanmsg.ranges[i] = 1/0.0f;
+                }
+            }
+        }
 
 
 
