@@ -4,6 +4,7 @@ project(grobot_navigation)
 find_package(ament_cmake REQUIRED)
 
 install(DIRECTORY
+  behavior_trees
   config
   launch
   DESTINATION share/${PROJECT_NAME}

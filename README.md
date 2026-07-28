@@ -348,6 +348,15 @@ src/grobot_navigation/config/nav2_params.yaml
 ros2 launch grobot_navigation navigation.launch.py robot_radius:=0.28
 ```
 
+机器人当前没有后视传感器，`grobot_navigation` 默认加载项目内的无倒车恢复行为树：
+
+```text
+src/grobot_navigation/behavior_trees/navigate_to_pose_no_backup.xml
+src/grobot_navigation/behavior_trees/navigate_through_poses_no_backup.xml
+```
+
+这两份行为树保留清理代价地图、原地旋转和等待恢复动作，但移除了 Nav2 默认行为树里的 `BackUp` 恢复节点。键盘手动控制不受这个限制。
+
 注意：`grobot_description` 里同时提供了 `base_link` 和 `base_footprint`，其中 `base_footprint` 是 `base_link` 的固定子坐标系，主要用于兼容 Nav2 的默认 frame 习惯。
 
 ## 航点任务

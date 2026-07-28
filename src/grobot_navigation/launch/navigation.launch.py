@@ -24,6 +24,20 @@ def generate_launch_description():
     rviz = LaunchConfiguration("rviz")
     robot_radius = LaunchConfiguration("robot_radius")
 
+    default_nav_to_pose_bt_xml = PathJoinSubstitution(
+        [
+            FindPackageShare("grobot_navigation"),
+            "behavior_trees",
+            "navigate_to_pose_no_backup.xml",
+        ]
+    )
+    default_nav_through_poses_bt_xml = PathJoinSubstitution(
+        [
+            FindPackageShare("grobot_navigation"),
+            "behavior_trees",
+            "navigate_through_poses_no_backup.xml",
+        ]
+    )
     default_map_file = PathJoinSubstitution(
         [EnvironmentVariable("HOME"), "GRobot", "maps", "hotel_test_map.yaml"]
     )
@@ -41,6 +55,8 @@ def generate_launch_description():
         source_file=params_file,
         root_key=namespace,
         param_rewrites={
+            "default_nav_to_pose_bt_xml": default_nav_to_pose_bt_xml,
+            "default_nav_through_poses_bt_xml": default_nav_through_poses_bt_xml,
             "robot_radius": robot_radius,
         },
         convert_types=True,
