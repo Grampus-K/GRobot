@@ -13,6 +13,8 @@ def generate_launch_description():
     lidar_y = LaunchConfiguration("lidar_y")
     lidar_z = LaunchConfiguration("lidar_z")
     lidar_yaw = LaunchConfiguration("lidar_yaw")
+    lidar_range_max = LaunchConfiguration("lidar_range_max")
+    lidar_filter_switch = LaunchConfiguration("lidar_filter_switch")
     lidar_rviz = LaunchConfiguration("lidar_rviz")
 
     description_launch = PathJoinSubstitution(
@@ -63,6 +65,16 @@ def generate_launch_description():
                 description="Lidar yaw relative to base_link, radians",
             ),
             DeclareLaunchArgument(
+                "lidar_range_max",
+                default_value="15.0",
+                description="Maximum published lidar range, meters",
+            ),
+            DeclareLaunchArgument(
+                "lidar_filter_switch",
+                default_value="1",
+                description="Enable lidar built-in trailing/outlier filter",
+            ),
+            DeclareLaunchArgument(
                 "lidar_rviz",
                 default_value="false",
                 description="Start the lidar RViz config from free_lidar",
@@ -85,6 +97,8 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource(lidar_launch),
                 launch_arguments={
                     "scanner_ip": scanner_ip,
+                    "range_max": lidar_range_max,
+                    "filter_switch": lidar_filter_switch,
                     "rviz": lidar_rviz,
                 }.items(),
             ),

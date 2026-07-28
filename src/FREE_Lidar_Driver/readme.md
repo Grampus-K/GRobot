@@ -22,6 +22,8 @@
 | `angle_anchor` | `0.0` | 角度缩放中心，0 度对应 ROS `+X` |
 | `output_angle_min` | `-175.0` | 发布到 `/scan` 的最小角度，单位度 |
 | `output_angle_max` | `175.0` | 发布到 `/scan` 的最大角度，单位度 |
+| `range_max` | `15.0` | 发布到 `/scan` 的最大距离，单位米 |
+| `filter_switch` | `1` | 开启驱动自带拖尾/孤立点滤波 |
 
 坐标约定：
 

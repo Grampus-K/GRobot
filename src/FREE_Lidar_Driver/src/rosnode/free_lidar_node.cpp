@@ -20,13 +20,13 @@ FreeLidarNode::FreeLidarNode():Node("free_lidar_node")
     this->declare_parameter<int32_t>("start_angle", -45);
     this->declare_parameter<int32_t>("stop_angle", 225);
     this->declare_parameter<float>("range_min", 0.05);
-    this->declare_parameter<float>("range_max", 25.0); // TODO
+    this->declare_parameter<float>("range_max", 15.0);
     this->declare_parameter<int>("offset_angle", -45);
     this->declare_parameter<float>("angle_scale", 2.0);
     this->declare_parameter<float>("angle_anchor", 0.0);
     this->declare_parameter<float>("output_angle_min", -175.0);
     this->declare_parameter<float>("output_angle_max", 175.0);
-    this->declare_parameter<int>("filter_switch", 0);
+    this->declare_parameter<int>("filter_switch", 1);
     this->declare_parameter<int>("cluster_num", 3);
     this->declare_parameter<int>("broad_filter_num", 10);
     

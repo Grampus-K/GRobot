@@ -190,6 +190,12 @@ ros2 launch grobot_bringup robot.launch.py
 ros2 launch grobot_bringup robot.launch.py scanner_ip:=192.168.10.7
 ```
 
+当前雷达默认开启驱动自带拖尾/孤立点滤波，并把 `/scan` 最大距离限制为 `15.0 m`，用于降低玻璃反射和远距离异常点对定位的影响。如需现场 A/B 测试，可以临时覆盖：
+
+```bash
+ros2 launch grobot_bringup robot.launch.py lidar_filter_switch:=0 lidar_range_max:=25.0
+```
+
 如果需要打开雷达 RViz 调试界面：
 
 ```bash

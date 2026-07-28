@@ -17,6 +17,8 @@ def generate_launch_description():
     angle_anchor = LaunchConfiguration("angle_anchor")
     output_angle_min = LaunchConfiguration("output_angle_min")
     output_angle_max = LaunchConfiguration("output_angle_max")
+    range_max = LaunchConfiguration("range_max")
+    filter_switch = LaunchConfiguration("filter_switch")
     rviz = LaunchConfiguration("rviz")
 
     rviz_config_dir = os.path.join(
@@ -67,6 +69,16 @@ def generate_launch_description():
             description="Maximum published angle in ROS coordinates, degrees",
         ),
         DeclareLaunchArgument(
+            "range_max",
+            default_value="15.0",
+            description="Maximum published LaserScan range, meters",
+        ),
+        DeclareLaunchArgument(
+            "filter_switch",
+            default_value="1",
+            description="Lidar built-in trailing/outlier filter switch",
+        ),
+        DeclareLaunchArgument(
             "rviz",
             default_value="true",
             description="Start RViz with the lidar display config",
@@ -91,7 +103,8 @@ def generate_launch_description():
                 "angle_anchor": ParameterValue(angle_anchor, value_type=float),
                 "output_angle_min": ParameterValue(output_angle_min, value_type=float),
                 "output_angle_max": ParameterValue(output_angle_max, value_type=float),
-                "filter_switch": 0,
+                "range_max": ParameterValue(range_max, value_type=float),
+                "filter_switch": ParameterValue(filter_switch, value_type=int),
                 "cluster_num": 10,
                 "broad_filter_num": 20,
                 "NOR_switch": 1,
