@@ -17,9 +17,9 @@ amcl:
     laser_max_range: 15.0
     laser_min_range: -1.0
     laser_model_type: "likelihood_field"
-    max_beams: 300
-    max_particles: 2000
-    min_particles: 500
+    max_beams: 360
+    max_particles: 3000
+    min_particles: 800
     odom_frame_id: "odom"
     pf_err: 0.05
     pf_z: 0.99
@@ -185,8 +185,8 @@ controller_server:
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 5.0
-      publish_frequency: 2.0
+      update_frequency: 8.0
+      publish_frequency: 3.0
       global_frame: odom
       robot_base_frame: base_link
       use_sim_time: false
@@ -228,7 +228,7 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 2.0
+      update_frequency: 3.0
       publish_frequency: 1.0
       global_frame: map
       robot_base_frame: base_link
