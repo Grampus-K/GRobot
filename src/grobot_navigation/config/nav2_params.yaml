@@ -143,10 +143,10 @@ controller_server:
     FollowPath:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       primary_controller: "nav2_mppi_controller::MPPIController"
-      angular_dist_threshold: 0.524
-      angular_disengage_threshold: 0.349
-      forward_sampling_distance: 0.8
-      rotate_to_heading_angular_vel: 1.5
+      angular_dist_threshold: 0.785
+      angular_disengage_threshold: 0.524
+      forward_sampling_distance: 0.5
+      rotate_to_heading_angular_vel: 1.8
       max_angular_accel: 5.0
       max_cost_threshold: 254.0
       simulate_ahead_time: 1.0
