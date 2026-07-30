@@ -404,7 +404,7 @@ velocity_smoother:
     max_velocity: [0.42, 0.0, 1.5]
     min_velocity: [0.0, 0.0, -1.5]
     max_accel: [3.6, 0.0, 4.5]
-    max_decel: [-3.6, 0.0, -4.5]
+    max_decel: [-1.5, 0.0, -2.5]
     odom_topic: "odom"
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]
