@@ -146,7 +146,7 @@ controller_server:
       angular_dist_threshold: 0.785
       angular_disengage_threshold: 0.524
       forward_sampling_distance: 0.5
-      rotate_to_heading_angular_vel: 1.8
+      rotate_to_heading_angular_vel: 2.0
       max_angular_accel: 5.0
       max_cost_threshold: 254.0
       simulate_ahead_time: 1.0
@@ -157,18 +157,18 @@ controller_server:
       time_steps: 56
       model_dt: 0.05
       batch_size: 3000
-      vx_std: 0.28
+      vx_std: 0.32
       vy_std: 0.0
-      wz_std: 0.32
-      vx_max: 0.50
+      wz_std: 0.38
+      vx_max: 0.60
       vx_min: 0.0
       vy_max: 0.0
-      wz_max: 1.7
-      ax_max: 3.5
-      ax_min: -2.5
+      wz_max: 2.0
+      ax_max: 4.0
+      ax_min: -3.0
       ay_min: -3.0
       ay_max: 3.0
-      az_max: 5.0
+      az_max: 6.0
       iteration_count: 1
       prune_distance: 1.5
       transform_tolerance: 0.1
@@ -258,7 +258,7 @@ local_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 8.0
-        inflation_radius: 0.35
+        inflation_radius: 0.40
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -316,7 +316,7 @@ global_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 8.0
-        inflation_radius: 0.35
+        inflation_radius: 0.40
       always_send_full_costmap: True
 
 map_server:
@@ -401,10 +401,10 @@ velocity_smoother:
     smoothing_frequency: 20.0
     scale_velocities: False
     feedback: "OPEN_LOOP"
-    max_velocity: [0.34, 0.0, 1.25]
-    min_velocity: [0.0, 0.0, -1.25]
-    max_accel: [3.0, 0.0, 3.8]
-    max_decel: [-3.0, 0.0, -3.8]
+    max_velocity: [0.42, 0.0, 1.5]
+    min_velocity: [0.0, 0.0, -1.5]
+    max_accel: [3.6, 0.0, 4.5]
+    max_decel: [-3.6, 0.0, -4.5]
     odom_topic: "odom"
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]
