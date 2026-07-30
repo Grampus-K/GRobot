@@ -144,15 +144,15 @@ controller_server:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       primary_controller: "nav2_mppi_controller::MPPIController"
       angular_dist_threshold: 0.785
-      angular_disengage_threshold: 0.524
-      forward_sampling_distance: 0.45
-      rotate_to_heading_angular_vel: 1.4
-      max_angular_accel: 3.0
+      angular_disengage_threshold: 0.698
+      forward_sampling_distance: 0.30
+      rotate_to_heading_angular_vel: 1.2
+      max_angular_accel: 2.2
       max_cost_threshold: 254.0
       simulate_ahead_time: 1.0
       rotate_to_goal_heading: true
       rotate_to_heading_once: true
-      closed_loop: true
+      closed_loop: false
       use_path_orientations: false
       time_steps: 56
       model_dt: 0.05
