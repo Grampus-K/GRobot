@@ -204,46 +204,6 @@ ros2 launch grobot_bringup robot.launch.py lidar_filter_switch:=0 lidar_range_ma
 ros2 launch grobot_bringup robot.launch.py lidar_rviz:=true
 ```
 
-### 雷达强度阈值标定
-
-工程根目录的 `scripts/scan_intensity_stats.py` 可以统计指定角度范围内的雷达距离和强度分布。脚本只依赖 ROS2 自带的 `rclpy` 和 `sensor_msgs`，运行时需要先启动机器人本体并加载工作空间环境。
-
-保持机器人和被测物体静止，让被测区域位于雷达正前方，然后在工作空间根目录运行：
-
-```bash
-cd ~/GRobot
-source /opt/ros/humble/setup.bash
-source install/setup.bash
-python3 scripts/scan_intensity_stats.py
-```
-
-默认采集 `/scan` 正前方 `-5~+5 deg` 内持续 5 秒的数据，并输出距离、强度的分位数和强度直方图。建议在相同距离和角度下分别采集以下场景：
-
-- 普通墙面
-- 黑色行李箱或其他低反射率真实障碍物
-- 玻璃区域
-- 玻璃附近能够复现穿透、反射或跳点的位置
-
-可以将每组原始样本保存为 CSV，便于后续比较：
-
-```bash
-mkdir -p ~/GRobot_scan_samples
-python3 scripts/scan_intensity_stats.py --duration 10 --csv ~/GRobot_scan_samples/wall.csv
-python3 scripts/scan_intensity_stats.py --duration 10 --csv ~/GRobot_scan_samples/black_object.csv
-python3 scripts/scan_intensity_stats.py --duration 10 --csv ~/GRobot_scan_samples/glass.csv
-python3 scripts/scan_intensity_stats.py --duration 10 --csv ~/GRobot_scan_samples/glass_noise.csv
-```
-
-如果目标不在正前方，可以修改采样扇区。例如统计左侧中心 `90 deg`、左右各 `5 deg` 的区域：
-
-```bash
-python3 scripts/scan_intensity_stats.py --center-angle 90 --half-angle 5
-```
-
-强度下限应优先保证黑色、深色和斜入射的真实障碍物不会被删除。只有当玻璃假点的强度明显低于所有必要真实障碍物时，才逐步提高 `intensity_min`；建议从 `10~20` 开始，每次增加 `10~20`。如果两类数据大量重叠，单一强度阈值无法可靠区分它们，不应继续提高阈值。
-
-`intensity_max` 默认保持 `65535`。只有实测确认玻璃异常点集中在独立的高强度区间，并且与所有真实障碍物之间存在明显空档时，才考虑降低上限。当前驱动在节点启动时读取强度参数，因此修改阈值后需要重新启动雷达节点才能生效。
-
 也可以分别启动底盘、雷达和机器人描述：
 
 ```bash
