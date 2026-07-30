@@ -175,7 +175,7 @@ controller_server:
       iteration_count: 1
       temperature: 0.3
       gamma: 0.015
-      motion_model: "diff_drive"
+      motion_model: "DiffDrive"
       diff_drive:
         plugin: "mppi::DiffDriveMotionModel"
       visualize: false
