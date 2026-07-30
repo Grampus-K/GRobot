@@ -79,6 +79,7 @@ sudo apt install -y \
   ros-humble-nav2-bringup \
   ros-humble-nav2-map-server \
   ros-humble-nav2-amcl \
+  ros-humble-nav2-mppi-controller \
   ros-humble-teleop-twist-keyboard
 ```
 
