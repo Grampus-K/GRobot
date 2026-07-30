@@ -146,8 +146,8 @@ controller_server:
       angular_dist_threshold: 0.785
       angular_disengage_threshold: 0.3925
       forward_sampling_distance: 0.7
-      rotate_to_heading_angular_vel: 1.0
-      max_angular_accel: 3.2
+      rotate_to_heading_angular_vel: 1.2
+      max_angular_accel: 4.0
       max_cost_threshold: 254.0
       simulate_ahead_time: 1.0
       rotate_to_goal_heading: true
@@ -160,15 +160,15 @@ controller_server:
       vx_std: 0.2
       vy_std: 0.0
       wz_std: 0.20
-      vx_max: 0.26
+      vx_max: 0.32
       vx_min: 0.0
       vy_max: 0.0
-      wz_max: 1.0
-      ax_max: 2.5
+      wz_max: 1.2
+      ax_max: 3.0
       ax_min: -2.5
       ay_min: -3.0
       ay_max: 3.0
-      az_max: 3.5
+      az_max: 4.0
       iteration_count: 1
       prune_distance: 1.5
       transform_tolerance: 0.1
