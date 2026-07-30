@@ -143,11 +143,11 @@ controller_server:
     FollowPath:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       primary_controller: "nav2_mppi_controller::MPPIController"
-      angular_dist_threshold: 0.785
-      angular_disengage_threshold: 0.3925
-      forward_sampling_distance: 0.7
-      rotate_to_heading_angular_vel: 1.2
-      max_angular_accel: 4.0
+      angular_dist_threshold: 0.524
+      angular_disengage_threshold: 0.349
+      forward_sampling_distance: 0.8
+      rotate_to_heading_angular_vel: 1.5
+      max_angular_accel: 5.0
       max_cost_threshold: 254.0
       simulate_ahead_time: 1.0
       rotate_to_goal_heading: true
@@ -157,23 +157,23 @@ controller_server:
       time_steps: 56
       model_dt: 0.05
       batch_size: 3000
-      vx_std: 0.2
+      vx_std: 0.24
       vy_std: 0.0
-      wz_std: 0.20
-      vx_max: 0.32
+      wz_std: 0.28
+      vx_max: 0.40
       vx_min: 0.0
       vy_max: 0.0
-      wz_max: 1.2
-      ax_max: 3.0
+      wz_max: 1.5
+      ax_max: 3.5
       ax_min: -2.5
       ay_min: -3.0
       ay_max: 3.0
-      az_max: 4.0
+      az_max: 5.0
       iteration_count: 1
       prune_distance: 1.5
       transform_tolerance: 0.1
-      temperature: 0.45
-      gamma: 0.03
+      temperature: 0.35
+      gamma: 0.02
       motion_model: "DiffDrive"
       clamp_raw_controls: true
       visualize: false
@@ -215,7 +215,7 @@ controller_server:
       PathAlignCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 8.0
+        cost_weight: 6.0
         max_path_occupancy_ratio: 0.05
         trajectory_point_step: 4
         threshold_to_consider: 0.5
@@ -224,13 +224,13 @@ controller_server:
       PathFollowCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 6.0
+        cost_weight: 8.0
         offset_from_furthest: 5
         threshold_to_consider: 1.4
       PathAngleCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 0.5
+        cost_weight: 0.3
         offset_from_furthest: 4
         threshold_to_consider: 0.5
         max_angle_to_furthest: 1.0
