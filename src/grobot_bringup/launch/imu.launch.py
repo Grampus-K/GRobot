@@ -56,4 +56,11 @@ def generate_launch_description():
         output="screen",
     )
 
-    return LaunchDescription(declared_arguments + [imu_node, corrector_node])
+    fuser_node = Node(
+        package="grobot_odrive_base",
+        executable="odom_imu_fuser",
+        name="odom_imu_fuser",
+        output="screen",
+    )
+
+    return LaunchDescription(declared_arguments + [imu_node, corrector_node, fuser_node])
