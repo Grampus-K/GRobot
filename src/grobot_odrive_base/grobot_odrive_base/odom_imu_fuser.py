@@ -22,7 +22,6 @@ class OdomImuFuser(Node):
 
         self.imu_buffer = deque(maxlen=500)
         self.initial_yaw = None
-        self.initial_odom_yaw = None
 
         self.imu_sub = self.create_subscription(Imu, "/imu/data", self.imu_callback, 10)
         self.odom_sub = self.create_subscription(Odometry, "/odom_raw", self.odom_callback, 10)
@@ -43,11 +42,8 @@ class OdomImuFuser(Node):
 
         if self.initial_yaw is None:
             self.initial_yaw = imu_yaw
-            self.initial_odom_yaw = self._quat_to_yaw(odom_raw.pose.pose.orientation)
 
-        odom_yaw_from_wheels = self._quat_to_yaw(odom_raw.pose.pose.orientation)
-        odom_yaw_drift = odom_yaw_from_wheels - self.initial_odom_yaw
-        corrected_yaw = self.initial_yaw + odom_yaw_drift + (imu_yaw - self.initial_yaw)
+        corrected_yaw = imu_yaw
 
         corrected_quat = self._yaw_to_quat(corrected_yaw)
 
