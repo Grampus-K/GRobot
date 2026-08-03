@@ -2,8 +2,8 @@ import math
 from collections import deque
 
 import rclpy
-from geometry_msgs.msg import TwistStamped
 from rclpy.node import Node
+from rclpy.qos import QoSProfile, QoSDurabilityPolicy, QoSHistoryPolicy, QoSReliabilityPolicy
 from sensor_msgs.msg import Imu, LaserScan
 
 
@@ -15,11 +15,18 @@ class ImuScanCorrector(Node):
         self.max_imu_age = float(self.get_parameter("max_imu_age").value)
 
         self.imu_buffer = deque(maxlen=200)
-        self._pending_scan = None
 
-        self.imu_sub = self.create_subscription(Imu, "/imu/data", self.imu_callback, 10)
-        self.scan_sub = self.create_subscription(LaserScan, "/scan", self.scan_callback, 10)
-        self.corrected_pub = self.create_publisher(LaserScan, "/scan_corrected", 10)
+        imu_qos = QoSProfile(depth=10)
+        scan_qos = QoSProfile(
+            depth=1,
+            reliability=QoSReliabilityPolicy.BEST_EFFORT,
+            durability=QoSDurabilityPolicy.VOLATILE,
+            history=QoSHistoryPolicy.KEEP_LAST,
+        )
+
+        self.imu_sub = self.create_subscription(Imu, "/imu/data", self.imu_callback, imu_qos)
+        self.scan_sub = self.create_subscription(LaserScan, "/scan", self.scan_callback, scan_qos)
+        self.corrected_pub = self.create_publisher(LaserScan, "/scan_corrected", scan_qos)
 
         self.get_logger().info("IMU scan corrector ready, publishing to /scan_corrected")
 
