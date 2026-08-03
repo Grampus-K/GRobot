@@ -33,7 +33,7 @@ class ODriveBaseNode(Node):
         self._declare_parameters()
         self._load_parameters()
 
-        self.odom_pub = self.create_publisher(Odometry, "odom_raw", 10)
+        self.odom_pub = self.create_publisher(Odometry, "odom", 10)
         self.tf_broadcaster = TransformBroadcaster(self)
         self.cmd_sub = self.create_subscription(Twist, "cmd_vel", self.cmd_vel_callback, 10)
 

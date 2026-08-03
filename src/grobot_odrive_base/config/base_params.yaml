@@ -31,4 +31,4 @@ odrive_base_node:
 
     odom_frame: odom
     base_frame: base_link
-    publish_tf: false
+    publish_tf: true
