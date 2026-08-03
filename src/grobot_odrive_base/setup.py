@@ -22,6 +22,7 @@ setup(
     entry_points={
         "console_scripts": [
             "odrive_base_node = grobot_odrive_base.odrive_base_node:main",
+            "imu_scan_corrector = grobot_odrive_base.imu_scan_corrector:main",
         ],
     },
 )

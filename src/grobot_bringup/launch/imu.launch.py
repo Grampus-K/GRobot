@@ -49,4 +49,11 @@ def generate_launch_description():
         ],
     )
 
-    return LaunchDescription(declared_arguments + [imu_node])
+    corrector_node = Node(
+        package="grobot_odrive_base",
+        executable="imu_scan_corrector",
+        name="imu_scan_corrector",
+        output="screen",
+    )
+
+    return LaunchDescription(declared_arguments + [imu_node, corrector_node])
