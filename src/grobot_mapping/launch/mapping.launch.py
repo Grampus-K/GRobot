@@ -8,12 +8,12 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     use_sim_time = LaunchConfiguration("use_sim_time")
-    params_file = LaunchConfiguration("params_file")
     rviz = LaunchConfiguration("rviz")
 
-    default_params_file = PathJoinSubstitution(
-        [FindPackageShare("grobot_mapping"), "config", "slam_toolbox.yaml"]
+    cartographer_config_dir = PathJoinSubstitution(
+        [FindPackageShare("grobot_mapping"), "config"]
     )
+    configuration_basename = "cartographer.lua"
     rviz_config_file = PathJoinSubstitution(
         [FindPackageShare("grobot_mapping"), "rviz", "mapping.rviz"]
     )
@@ -26,23 +26,30 @@ def generate_launch_description():
                 description="Use simulation clock if true",
             ),
             DeclareLaunchArgument(
-                "params_file",
-                default_value=default_params_file,
-                description="Full path to the slam_toolbox parameter file",
-            ),
-            DeclareLaunchArgument(
                 "rviz",
                 default_value="true",
                 description="Start RViz with the mapping display config",
             ),
             Node(
-                package="slam_toolbox",
-                executable="async_slam_toolbox_node",
-                name="slam_toolbox",
+                package="cartographer_ros",
+                executable="cartographer_node",
+                name="cartographer_node",
+                output="screen",
+                parameters=[{"use_sim_time": use_sim_time}],
+                arguments=[
+                    "-configuration_directory", cartographer_config_dir,
+                    "-configuration_basename", configuration_basename,
+                ],
+            ),
+            Node(
+                package="cartographer_ros",
+                executable="occupancy_grid_node",
+                name="occupancy_grid_node",
                 output="screen",
                 parameters=[
-                    params_file,
                     {"use_sim_time": use_sim_time},
+                    {"resolution": 0.05},
+                    {"publish_period_sec": 1.0},
                 ],
             ),
             Node(

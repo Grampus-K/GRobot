@@ -8,7 +8,7 @@
 - `grobot_odrive_base`：ODrive 差速底盘驱动，订阅 `/cmd_vel`，发布 `/odom` 和 `odom -> base_link`
 - `grobot_description`：机器人 URDF/xacro 描述，发布 `base_link -> scan` 等静态 TF
 - `grobot_bringup`：统一启动机器人描述、底盘驱动和雷达驱动
-- `grobot_mapping`：基于 `slam_toolbox` 的手动建图启动、参数和 RViz 配置
+- `grobot_mapping`：基于 `cartographer_ros` 的手动建图启动、参数和 RViz 配置
 - `grobot_navigation`：基于 Nav2 的地图加载、AMCL 定位和自主导航启动
 
 此外，实机上预留了 Orbbec 单目结构光相机的二进制安装和启动说明；当前相机暂未接入导航主流程。
@@ -19,7 +19,7 @@
 map -> odom -> base_link -> scan
 ```
 
-其中 `odom -> base_link` 由底盘轮式里程计提供，`base_link -> scan` 由机器人描述提供，`map -> odom` 在建图时由 `slam_toolbox` 提供，在导航定位时由 AMCL/Nav2 提供。
+其中 `odom -> base_link` 由底盘轮式里程计提供，`base_link -> scan` 由机器人描述提供，`map -> odom` 在建图时由 `cartographer` 提供，在导航定位时由 AMCL/Nav2 提供。
 
 ## 实测参数
 
@@ -297,7 +297,7 @@ ros2 run nav2_map_server map_saver_cli -f ~/GRobot/maps/hotel_test_map
 ~/GRobot/maps/hotel_test_map.pgm
 ```
 
-如果 `slam_toolbox` 一直提示类似下面的消息：
+如果 `cartographer` 一直提示类似下面的消息：
 
 ```text
 Message Filter dropping message: frame 'scan' ...
