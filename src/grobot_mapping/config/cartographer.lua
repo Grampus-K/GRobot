@@ -25,7 +25,11 @@ options = {
   rangefinder_max_range = 20.0,
   rangefinder_min_angle = -2.1,
   rangefinder_max_angle = 2.1,
-  rangefinder_missing_ray_removal = false,
+  rangefinder_sampling_ratio = 1.0,
+  odometry_sampling_ratio = 1.0,
+  fixed_frame_pose_sampling_ratio = 1.0,
+  imu_sampling_ratio = 1.0,
+  landmarks_sampling_ratio = 1.0,
 }
 
 MAP_BUILDER.use_trajectory_builder_2d = true
