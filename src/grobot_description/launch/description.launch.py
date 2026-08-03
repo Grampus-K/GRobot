@@ -20,6 +20,12 @@ def generate_launch_description():
         DeclareLaunchArgument("lidar_y", default_value="0.0"),
         DeclareLaunchArgument("lidar_z", default_value="0.05"),
         DeclareLaunchArgument("lidar_yaw", default_value="0.0"),
+        DeclareLaunchArgument("imu_x", default_value="0.0"),
+        DeclareLaunchArgument("imu_y", default_value="0.0"),
+        DeclareLaunchArgument("imu_z", default_value="0.10"),
+        DeclareLaunchArgument("imu_roll", default_value="0.0"),
+        DeclareLaunchArgument("imu_pitch", default_value="0.0"),
+        DeclareLaunchArgument("imu_yaw", default_value="0.0"),
     ]
 
     robot_description = {
@@ -45,6 +51,18 @@ def generate_launch_description():
                 LaunchConfiguration("lidar_z"),
                 " lidar_yaw:=",
                 LaunchConfiguration("lidar_yaw"),
+                " imu_x:=",
+                LaunchConfiguration("imu_x"),
+                " imu_y:=",
+                LaunchConfiguration("imu_y"),
+                " imu_z:=",
+                LaunchConfiguration("imu_z"),
+                " imu_roll:=",
+                LaunchConfiguration("imu_roll"),
+                " imu_pitch:=",
+                LaunchConfiguration("imu_pitch"),
+                " imu_yaw:=",
+                LaunchConfiguration("imu_yaw"),
             ]
         )
     }

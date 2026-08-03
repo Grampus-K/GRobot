@@ -9,6 +9,12 @@
   <xacro:arg name="lidar_y" default="0.0"/>
   <xacro:arg name="lidar_z" default="0.05"/>
   <xacro:arg name="lidar_yaw" default="0.0"/>
+  <xacro:arg name="imu_x" default="0.0"/>
+  <xacro:arg name="imu_y" default="0.0"/>
+  <xacro:arg name="imu_z" default="0.10"/>
+  <xacro:arg name="imu_roll" default="0.0"/>
+  <xacro:arg name="imu_pitch" default="0.0"/>
+  <xacro:arg name="imu_yaw" default="0.0"/>
 
   <xacro:property name="base_diameter" value="${float('$(arg base_diameter)')}"/>
   <xacro:property name="base_radius" value="${base_diameter / 2.0}"/>
@@ -20,6 +26,12 @@
   <xacro:property name="lidar_y" value="${float('$(arg lidar_y)')}"/>
   <xacro:property name="lidar_z" value="${float('$(arg lidar_z)')}"/>
   <xacro:property name="lidar_yaw" value="${float('$(arg lidar_yaw)')}"/>
+  <xacro:property name="imu_x" value="${float('$(arg imu_x)')}"/>
+  <xacro:property name="imu_y" value="${float('$(arg imu_y)')}"/>
+  <xacro:property name="imu_z" value="${float('$(arg imu_z)')}"/>
+  <xacro:property name="imu_roll" value="${float('$(arg imu_roll)')}"/>
+  <xacro:property name="imu_pitch" value="${float('$(arg imu_pitch)')}"/>
+  <xacro:property name="imu_yaw" value="${float('$(arg imu_yaw)')}"/>
 
   <material name="body_gray">
     <color rgba="0.35 0.38 0.42 1.0"/>
@@ -101,5 +113,21 @@
     <parent link="base_link"/>
     <child link="scan"/>
     <origin xyz="${lidar_x} ${lidar_y} ${lidar_z}" rpy="0 0 ${lidar_yaw}"/>
+  </joint>
+
+  <link name="imu_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.03 0.03 0.02"/>
+      </geometry>
+      <material name="lidar_blue"/>
+    </visual>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="${imu_x} ${imu_y} ${imu_z}" rpy="${imu_roll} ${imu_pitch} ${imu_yaw}"/>
   </joint>
 </robot>

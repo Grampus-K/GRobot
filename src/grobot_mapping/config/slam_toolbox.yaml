@@ -7,6 +7,9 @@ slam_toolbox:
     base_frame: base_link
     scan_topic: /scan
 
+    use_imu_data: true
+    imu_topic: "/imu/data"
+
     use_sim_time: false
     debug_logging: false
     throttle_scans: 1

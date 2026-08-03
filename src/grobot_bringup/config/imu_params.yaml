@@ -1,0 +1,6 @@
+imuDriverNode:
+  ros__parameters:
+    port: "/dev/imu_usb"
+    baudrate: 230400
+    protocol: "TTL_STD"
+    modbusID: 0x50

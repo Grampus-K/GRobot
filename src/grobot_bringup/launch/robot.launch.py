@@ -26,6 +26,9 @@ def generate_launch_description():
     lidar_launch = PathJoinSubstitution(
         [FindPackageShare("free_lidar"), "launch", "free_lidar_launch.py"]
     )
+    imu_launch = PathJoinSubstitution(
+        [FindPackageShare("grobot_bringup"), "launch", "imu.launch.py"]
+    )
 
     return LaunchDescription(
         [
@@ -101,6 +104,9 @@ def generate_launch_description():
                     "filter_switch": lidar_filter_switch,
                     "rviz": lidar_rviz,
                 }.items(),
+            ),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(imu_launch),
             ),
         ]
     )
