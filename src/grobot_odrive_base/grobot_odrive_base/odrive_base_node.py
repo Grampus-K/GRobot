@@ -39,6 +39,8 @@ class ODriveBaseNode(Node):
 
         self.cmd_vx = 0.0
         self.cmd_wz = 0.0
+        self.smooth_vx = 0.0
+        self.smooth_wz = 0.0
         self.last_cmd_time = self.get_clock().now()
 
         self.x = 0.0
@@ -85,6 +87,8 @@ class ODriveBaseNode(Node):
         self.declare_parameter("left_feedback_sign", 1.0)
         self.declare_parameter("right_feedback_sign", -1.0)
         self.declare_parameter("max_wheel_turn_s", 2.0)
+        self.declare_parameter("max_linear_accel", 0.5)
+        self.declare_parameter("max_angular_accel", 1.0)
         self.declare_parameter("cmd_timeout", 0.5)
         self.declare_parameter("control_rate_hz", 50.0)
         self.declare_parameter("error_check_rate_hz", 2.0)
@@ -108,6 +112,8 @@ class ODriveBaseNode(Node):
         self.left_feedback_sign = float(self.get_parameter("left_feedback_sign").value)
         self.right_feedback_sign = float(self.get_parameter("right_feedback_sign").value)
         self.max_wheel_turn_s = float(self.get_parameter("max_wheel_turn_s").value)
+        self.max_linear_accel = float(self.get_parameter("max_linear_accel").value)
+        self.max_angular_accel = float(self.get_parameter("max_angular_accel").value)
         self.cmd_timeout = float(self.get_parameter("cmd_timeout").value)
         self.control_rate_hz = float(self.get_parameter("control_rate_hz").value)
         self.error_check_rate_hz = float(self.get_parameter("error_check_rate_hz").value)
@@ -277,12 +283,20 @@ class ODriveBaseNode(Node):
 
         now = self.get_clock().now()
         try:
-            if self.command_is_stale():
-                left_turn_s = 0.0
-                right_turn_s = 0.0
-            else:
-                left_turn_s, right_turn_s = self.twist_to_wheel_turns(self.cmd_vx, self.cmd_wz)
+            target_vx = 0.0
+            target_wz = 0.0
+            if not self.command_is_stale():
+                target_vx = self.cmd_vx
+                target_wz = self.cmd_wz
 
+            dt = 1.0 / self.control_rate_hz
+            step_v = self.max_linear_accel * dt
+            step_w = self.max_angular_accel * dt
+
+            self.smooth_vx += clamp(target_vx - self.smooth_vx, -step_v, step_v)
+            self.smooth_wz += clamp(target_wz - self.smooth_wz, -step_w, step_w)
+
+            left_turn_s, right_turn_s = self.twist_to_wheel_turns(self.smooth_vx, self.smooth_wz)
             self.write_wheel_commands(left_turn_s, right_turn_s)
             self.update_odometry(now)
 

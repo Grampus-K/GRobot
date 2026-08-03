@@ -16,6 +16,8 @@ odrive_base_node:
 
     # Conservative software limit for early indoor testing.
     max_wheel_turn_s: 2.0
+    max_linear_accel: 0.5
+    max_angular_accel: 1.0
     cmd_timeout: 0.5
     control_rate_hz: 50.0
     error_check_rate_hz: 2.0
