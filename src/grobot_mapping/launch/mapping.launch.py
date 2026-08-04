@@ -42,6 +42,7 @@ def generate_launch_description():
                 ],
                 remappings=[
                     ("/scan", "/scan_corrected"),
+                    ("/imu", "/imu/data"),
                 ],
             ),
             Node(
