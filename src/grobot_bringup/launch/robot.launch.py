@@ -16,6 +16,7 @@ def generate_launch_description():
     lidar_range_max = LaunchConfiguration("lidar_range_max")
     lidar_filter_switch = LaunchConfiguration("lidar_filter_switch")
     lidar_rviz = LaunchConfiguration("lidar_rviz")
+    intensity_min = LaunchConfiguration("intensity_min")
 
     description_launch = PathJoinSubstitution(
         [FindPackageShare("grobot_description"), "launch", "description.launch.py"]
@@ -28,9 +29,6 @@ def generate_launch_description():
     )
     imu_launch = PathJoinSubstitution(
         [FindPackageShare("grobot_bringup"), "launch", "imu.launch.py"]
-    )
-    filter_launch = PathJoinSubstitution(
-        [FindPackageShare("grobot_bringup"), "launch", "laser_filter.launch.py"]
     )
 
     return LaunchDescription(
@@ -85,6 +83,11 @@ def generate_launch_description():
                 default_value="false",
                 description="Start the lidar RViz config from free_lidar",
             ),
+            DeclareLaunchArgument(
+                "intensity_min",
+                default_value="0.0",
+                description="Minimum laser intensity to publish (filter glass noise)",
+            ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(description_launch),
                 launch_arguments={
@@ -106,13 +109,11 @@ def generate_launch_description():
                     "range_max": lidar_range_max,
                     "filter_switch": lidar_filter_switch,
                     "rviz": lidar_rviz,
+                    "intensity_min": intensity_min,
                 }.items(),
             ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(imu_launch),
-            ),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(filter_launch),
             ),
         ]
     )
