@@ -46,6 +46,9 @@ def generate_launch_description():
                     "-configuration_basename", configuration_basename,
                     "-load_state_filename", pbstream_file,
                 ],
+                remappings=[
+                    ("/scan", "/scan_corrected"),
+                ],
             ),
             Node(
                 package="cartographer_ros",
