@@ -1,16 +1,18 @@
-scan_filter_chain:
-  - name: range
-    type: laser_filters/LaserScanRangeFilter
-    params:
-      lower_threshold: 0.1
-      upper_threshold: 10.0
-      lower_replacement_value: .inf
-      upper_replacement_value: .inf
+scan_to_scan_filter_chain:
+  ros__parameters:
+    scan_filter_chain:
+      - name: range
+        type: laser_filters/LaserScanRangeFilter
+        params:
+          lower_threshold: 0.1
+          upper_threshold: 10.0
+          lower_replacement_value: .inf
+          upper_replacement_value: .inf
 
-  - name: intensity
-    type: laser_filters/LaserScanIntensityFilter
-    params:
-      lower_threshold: 50
-      upper_threshold: 65535
-      lower_replacement_value: .inf
-      upper_replacement_value: .inf
+      - name: intensity
+        type: laser_filters/LaserScanIntensityFilter
+        params:
+          lower_threshold: 50
+          upper_threshold: 65535
+          lower_replacement_value: .inf
+          upper_replacement_value: .inf
