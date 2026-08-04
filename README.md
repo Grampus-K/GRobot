@@ -287,14 +287,16 @@ ros2 run tf2_ros tf2_echo odom base_link
 
 ```bash
 mkdir -p ~/GRobot/maps
+rosservice call /write_state "{filename: '/home/grpc/GRobot/maps/hotel.pbstream'}"
 ros2 run nav2_map_server map_saver_cli -f ~/GRobot/maps/hotel_test_map
 ```
 
 保存成功后会生成：
 
 ```text
-~/GRobot/maps/hotel_test_map.yaml
-~/GRobot/maps/hotel_test_map.pgm
+~/GRobot/maps/***.yaml
+~/GRobot/maps/***.pgm
+~/GRobot/maps/***.pbstream
 ```
 
 如果 `cartographer` 一直提示类似下面的消息：
@@ -353,9 +355,13 @@ rosservice call /write_state "{filename: '/home/grpc/GRobot/maps/hotel.pbstream'
 
 ```bash
 ros2 launch grobot_bringup robot.launch.py
+
 ros2 launch grobot_navigation navigation.launch.py \
   localization_mode:=cartographer \
   pbstream_file:=/home/grpc/GRobot/maps/hotel.pbstream
+  
+ros2 run rviz2 rviz2 -d /opt/ros/humble/share/nav2_bringup/rviz/nav2_default_view.rviz
+
 ```
 
 **对比：**
