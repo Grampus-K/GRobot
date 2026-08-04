@@ -7,7 +7,7 @@ class FrontIntensity(Node):
     def __init__(self):
         super().__init__("front_intensity")
         self.scan_sub = self.create_subscription(
-            LaserScan, "/scan_corrected", self.scan_callback, 10
+            LaserScan, "/scan", self.scan_callback, 10
         )
 
     def scan_callback(self, msg: LaserScan):
