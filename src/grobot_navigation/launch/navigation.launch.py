@@ -1,166 +1,177 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.conditions import IfCondition, UnlessCondition
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import (
-    EnvironmentVariable,
-    LaunchConfiguration,
-    PathJoinSubstitution,
-    PythonExpression,
-)
+from launch.actions import DeclareLaunchArgument
+from launch.conditions import IfCondition
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from nav2_common.launch import RewrittenYaml
 
 
 def generate_launch_description():
-    namespace = LaunchConfiguration("namespace")
-    map_file = LaunchConfiguration("map_file")
-    params_file = LaunchConfiguration("params_file")
-    slam = LaunchConfiguration("slam")
     use_sim_time = LaunchConfiguration("use_sim_time")
-    autostart = LaunchConfiguration("autostart")
-    use_composition = LaunchConfiguration("use_composition")
-    use_respawn = LaunchConfiguration("use_respawn")
+    params_file = LaunchConfiguration("params_file")
+    pbstream_file = LaunchConfiguration("pbstream_file")
     rviz = LaunchConfiguration("rviz")
     robot_radius = LaunchConfiguration("robot_radius")
-    localization_mode = LaunchConfiguration("localization_mode")
-    pbstream_file = LaunchConfiguration("pbstream_file")
+    autostart = LaunchConfiguration("autostart")
 
-    default_nav_to_pose_bt_xml = PathJoinSubstitution(
-        [
-            FindPackageShare("grobot_navigation"),
-            "behavior_trees",
-            "navigate_to_pose_no_backup.xml",
-        ]
-    )
-    default_nav_through_poses_bt_xml = PathJoinSubstitution(
-        [
-            FindPackageShare("grobot_navigation"),
-            "behavior_trees",
-            "navigate_through_poses_no_backup.xml",
-        ]
-    )
-    default_map_file = PathJoinSubstitution(
-        [EnvironmentVariable("HOME"), "GRobot", "maps", "hotel_test_map.yaml"]
-    )
-    default_params_file = PathJoinSubstitution(
-        [FindPackageShare("grobot_navigation"), "config", "nav2_params.yaml"]
+    cartographer_config_dir = PathJoinSubstitution(
+        [FindPackageShare("grobot_mapping"), "config"]
     )
     rviz_config_file = PathJoinSubstitution(
         [FindPackageShare("nav2_bringup"), "rviz", "nav2_default_view.rviz"]
     )
-    bringup_launch_file = PathJoinSubstitution(
-        [FindPackageShare("nav2_bringup"), "launch", "bringup_launch.py"]
-    )
-    cartographer_localization_launch = PathJoinSubstitution(
-        [FindPackageShare("grobot_mapping"), "launch", "cartographer_localization.launch.py"]
+    default_params_file = PathJoinSubstitution(
+        [FindPackageShare("grobot_navigation"), "config", "nav2_params.yaml"]
     )
 
     configured_params = RewrittenYaml(
         source_file=params_file,
-        root_key=namespace,
+        root_key="",
         param_rewrites={
-            "default_nav_to_pose_bt_xml": default_nav_to_pose_bt_xml,
-            "default_nav_through_poses_bt_xml": default_nav_through_poses_bt_xml,
             "robot_radius": robot_radius,
         },
         convert_types=True,
     )
 
+    declared_arguments = [
+        DeclareLaunchArgument("use_sim_time", default_value="false"),
+        DeclareLaunchArgument("params_file", default_value=default_params_file),
+        DeclareLaunchArgument(
+            "pbstream_file", description="Path to .pbstream file for Cartographer localization"
+        ),
+        DeclareLaunchArgument("rviz", default_value="true"),
+        DeclareLaunchArgument("robot_radius", default_value="0.26"),
+        DeclareLaunchArgument("autostart", default_value="true"),
+    ]
+
+    cartographer_node = Node(
+        package="cartographer_ros",
+        executable="cartographer_node",
+        name="cartographer_node",
+        output="screen",
+        parameters=[{"use_sim_time": use_sim_time}],
+        arguments=[
+            "-configuration_directory", cartographer_config_dir,
+            "-configuration_basename", "cartographer_localization.lua",
+            "-load_state_filename", pbstream_file,
+        ],
+        remappings=[
+            ("/scan", "/scan_corrected"),
+            ("/imu", "/imu/data"),
+        ],
+    )
+
+    occupancy_grid_node = Node(
+        package="cartographer_ros",
+        executable="cartographer_occupancy_grid_node",
+        name="occupancy_grid_node",
+        output="screen",
+        parameters=[
+            {"use_sim_time": use_sim_time},
+            {"resolution": 0.05},
+            {"publish_period_sec": 1.0},
+        ],
+    )
+
+    lifecycle_manager = Node(
+        package="nav2_lifecycle_manager",
+        executable="lifecycle_manager",
+        name="lifecycle_manager_navigation",
+        output="screen",
+        parameters=[{
+            "use_sim_time": use_sim_time,
+            "autostart": autostart,
+            "node_names": [
+                "controller_server",
+                "smoother_server",
+                "planner_server",
+                "behavior_server",
+                "bt_navigator",
+                "waypoint_follower",
+                "velocity_smoother",
+            ],
+        }],
+    )
+
+    controller_server = Node(
+        package="nav2_controller",
+        executable="controller_server",
+        name="controller_server",
+        output="screen",
+        parameters=[configured_params],
+    )
+
+    smoother_server = Node(
+        package="nav2_smoother",
+        executable="smoother_server",
+        name="smoother_server",
+        output="screen",
+        parameters=[configured_params],
+    )
+
+    planner_server = Node(
+        package="nav2_planner",
+        executable="planner_server",
+        name="planner_server",
+        output="screen",
+        parameters=[configured_params],
+    )
+
+    behavior_server = Node(
+        package="nav2_behaviors",
+        executable="behavior_server",
+        name="behavior_server",
+        output="screen",
+        parameters=[configured_params],
+    )
+
+    bt_navigator = Node(
+        package="nav2_bt_navigator",
+        executable="bt_navigator",
+        name="bt_navigator",
+        output="screen",
+        parameters=[configured_params],
+    )
+
+    waypoint_follower = Node(
+        package="nav2_waypoint_follower",
+        executable="waypoint_follower",
+        name="waypoint_follower",
+        output="screen",
+        parameters=[configured_params],
+    )
+
+    velocity_smoother = Node(
+        package="nav2_velocity_smoother",
+        executable="velocity_smoother",
+        name="velocity_smoother",
+        output="screen",
+        parameters=[configured_params],
+    )
+
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2_navigation",
+        arguments=["-d", rviz_config_file],
+        output="screen",
+        condition=IfCondition(rviz),
+    )
+
     return LaunchDescription(
-        [
-            DeclareLaunchArgument(
-                "namespace",
-                default_value="",
-                description="Top-level namespace for Nav2",
-            ),
-            DeclareLaunchArgument(
-                "map_file",
-                default_value=default_map_file,
-                description="Path to the saved occupancy grid map",
-            ),
-            DeclareLaunchArgument(
-                "params_file",
-                default_value=default_params_file,
-                description="Path to the Nav2 parameter file",
-            ),
-            DeclareLaunchArgument(
-                "slam",
-                default_value="False",
-                description="Run SLAM instead of localization",
-            ),
-            DeclareLaunchArgument(
-                "localization_mode",
-                default_value="amcl",
-                description="Localization mode: amcl or cartographer",
-            ),
-            DeclareLaunchArgument(
-                "pbstream_file",
-                default_value="",
-                description="Path to .pbstream file for Cartographer localization",
-            ),
-            DeclareLaunchArgument(
-                "use_sim_time",
-                default_value="false",
-                description="Use simulation clock if true",
-            ),
-            DeclareLaunchArgument(
-                "autostart",
-                default_value="true",
-                description="Automatically activate Nav2 lifecycle nodes",
-            ),
-            DeclareLaunchArgument(
-                "use_composition",
-                default_value="False",
-                description="Use component composition if true",
-            ),
-            DeclareLaunchArgument(
-                "use_respawn",
-                default_value="False",
-                description="Respawn nodes if they crash",
-            ),
-            DeclareLaunchArgument(
-                "rviz",
-                default_value="true",
-                description="Start RViz with the Nav2 display config",
-            ),
-            DeclareLaunchArgument(
-                "robot_radius",
-                default_value="0.26",
-                description="Circular robot radius used by Nav2 costmaps, meters",
-            ),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(cartographer_localization_launch),
-                condition=IfCondition(
-                    PythonExpression(["'", localization_mode, "' == 'cartographer'"])
-                ),
-                launch_arguments={
-                    "use_sim_time": use_sim_time,
-                    "pbstream_file": pbstream_file,
-                    "rviz": "false",
-                }.items(),
-            ),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(bringup_launch_file),
-                launch_arguments={
-                    "namespace": namespace,
-                    "map": map_file,
-                    "slam": slam,
-                    "use_sim_time": use_sim_time,
-                    "params_file": configured_params,
-                    "autostart": autostart,
-                    "use_composition": use_composition,
-                    "use_respawn": use_respawn,
-                }.items(),
-            ),
-            Node(
-                package="rviz2",
-                executable="rviz2",
-                name="rviz2_navigation",
-                arguments=["-d", rviz_config_file],
-                output="screen",
-                condition=IfCondition(rviz),
-            ),
+        declared_arguments
+        + [
+            cartographer_node,
+            occupancy_grid_node,
+            lifecycle_manager,
+            controller_server,
+            smoother_server,
+            planner_server,
+            behavior_server,
+            bt_navigator,
+            waypoint_follower,
+            velocity_smoother,
+            rviz_node,
         ]
     )
