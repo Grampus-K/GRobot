@@ -1,13 +1,20 @@
 import rclpy
 from rclpy.node import Node
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy, QoSHistoryPolicy
 from sensor_msgs.msg import LaserScan
 
 
 class FrontIntensity(Node):
     def __init__(self):
         super().__init__("front_intensity")
+        qos = QoSProfile(
+            depth=1,
+            reliability=QoSReliabilityPolicy.BEST_EFFORT,
+            durability=QoSDurabilityPolicy.VOLATILE,
+            history=QoSHistoryPolicy.KEEP_LAST,
+        )
         self.scan_sub = self.create_subscription(
-            LaserScan, "/scan", self.scan_callback, 10
+            LaserScan, "/scan", self.scan_callback, qos
         )
 
     def scan_callback(self, msg: LaserScan):
