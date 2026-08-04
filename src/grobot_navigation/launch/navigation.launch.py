@@ -1,11 +1,12 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
     PathJoinSubstitution,
+    PythonExpression,
 )
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -23,6 +24,8 @@ def generate_launch_description():
     use_respawn = LaunchConfiguration("use_respawn")
     rviz = LaunchConfiguration("rviz")
     robot_radius = LaunchConfiguration("robot_radius")
+    localization_mode = LaunchConfiguration("localization_mode")
+    pbstream_file = LaunchConfiguration("pbstream_file")
 
     default_nav_to_pose_bt_xml = PathJoinSubstitution(
         [
@@ -49,6 +52,9 @@ def generate_launch_description():
     )
     bringup_launch_file = PathJoinSubstitution(
         [FindPackageShare("nav2_bringup"), "launch", "bringup_launch.py"]
+    )
+    cartographer_localization_launch = PathJoinSubstitution(
+        [FindPackageShare("grobot_mapping"), "launch", "cartographer_localization.launch.py"]
     )
 
     configured_params = RewrittenYaml(
@@ -85,6 +91,16 @@ def generate_launch_description():
                 description="Run SLAM instead of localization",
             ),
             DeclareLaunchArgument(
+                "localization_mode",
+                default_value="amcl",
+                description="Localization mode: amcl or cartographer",
+            ),
+            DeclareLaunchArgument(
+                "pbstream_file",
+                default_value="",
+                description="Path to .pbstream file for Cartographer localization",
+            ),
+            DeclareLaunchArgument(
                 "use_sim_time",
                 default_value="false",
                 description="Use simulation clock if true",
@@ -113,6 +129,17 @@ def generate_launch_description():
                 "robot_radius",
                 default_value="0.26",
                 description="Circular robot radius used by Nav2 costmaps, meters",
+            ),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(cartographer_localization_launch),
+                condition=IfCondition(
+                    PythonExpression(["'", localization_mode, "' == 'cartographer'"])
+                ),
+                launch_arguments={
+                    "use_sim_time": use_sim_time,
+                    "pbstream_file": pbstream_file,
+                    "rviz": "false",
+                }.items(),
             ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(bringup_launch_file),

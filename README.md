@@ -338,6 +338,36 @@ ros2 launch grobot_navigation navigation.launch.py map_file:=/path/to/your_map.y
 ros2 launch grobot_navigation navigation.launch.py rviz:=false
 ```
 
+### Cartographer 重定位导航
+
+Nav2 默认使用 AMCL 做定位，也可以用 Cartographer 的 localization 模式替代，定位更准。
+
+**1. 建图时保存 `.pbstream` 文件：**
+
+```bash
+# 建图完成后，保存状态
+rosservice call /write_state "{filename: '/home/grpc/GRobot/maps/hotel.pbstream'}"
+```
+
+**2. 导航时使用 Cartographer 重定位：**
+
+```bash
+ros2 launch grobot_bringup robot.launch.py
+ros2 launch grobot_navigation navigation.launch.py \
+  localization_mode:=cartographer \
+  pbstream_file:=/home/grpc/GRobot/maps/hotel.pbstream
+```
+
+**对比：**
+
+| 特性 | AMCL | Cartographer |
+|------|------|--------------|
+| 定位原理 | 粒子滤波 | 扫描匹配 |
+| CPU 占用 | 波动大 | 稳定 |
+| 定位精度 | 一般 | 高 |
+| 初始化 | 需要手动给定初始位姿 | 自动全局定位 |
+| 地图格式 | `.pgm` + `.yaml` | `.pbstream` |
+
 Nav2 默认使用项目内参数文件：
 
 ```text
