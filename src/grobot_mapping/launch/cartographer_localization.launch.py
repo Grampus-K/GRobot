@@ -52,7 +52,7 @@ def generate_launch_description():
                     "-load_state_filename", pbstream_file,
                 ],
                 remappings=[
-                    ("/scan", "/scan_filtered"),
+                    ("/scan", "/scan_corrected"),
                     ("/imu", "/imu/data"),
                 ],
             ),

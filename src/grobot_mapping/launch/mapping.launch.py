@@ -46,7 +46,7 @@ def generate_launch_description():
                     "-configuration_basename", configuration_basename,
                 ],
                 remappings=[
-                    ("/scan", "/scan_filtered"),
+                    ("/scan", "/scan_corrected"),
                     ("/imu", "/imu/data"),
                 ],
             ),
