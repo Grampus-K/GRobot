@@ -22,7 +22,7 @@ def generate_launch_description():
         DeclareLaunchArgument("lidar_yaw", default_value="0.0"),
         DeclareLaunchArgument("imu_x", default_value="0.0"),
         DeclareLaunchArgument("imu_y", default_value="0.0"),
-        DeclareLaunchArgument("imu_z", default_value="0.10"),
+        DeclareLaunchArgument("imu_z", default_value="0.0"),
         DeclareLaunchArgument("imu_roll", default_value="0.0"),
         DeclareLaunchArgument("imu_pitch", default_value="0.0"),
         DeclareLaunchArgument("imu_yaw", default_value="0.0"),

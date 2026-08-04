@@ -11,7 +11,7 @@
   <xacro:arg name="lidar_yaw" default="0.0"/>
   <xacro:arg name="imu_x" default="0.0"/>
   <xacro:arg name="imu_y" default="0.0"/>
-  <xacro:arg name="imu_z" default="0.10"/>
+  <xacro:arg name="imu_z" default="0.0"/>
   <xacro:arg name="imu_roll" default="0.0"/>
   <xacro:arg name="imu_pitch" default="0.0"/>
   <xacro:arg name="imu_yaw" default="0.0"/>
