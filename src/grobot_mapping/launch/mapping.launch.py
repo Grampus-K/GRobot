@@ -35,7 +35,12 @@ def generate_launch_description():
                 executable="cartographer_node",
                 name="cartographer_node",
                 output="screen",
-                parameters=[{"use_sim_time": use_sim_time}],
+                parameters=[
+                    {"use_sim_time": use_sim_time},
+                    {
+                        "qos_overrides./imu/data.subscription.reliability": "reliable",
+                    },
+                ],
                 arguments=[
                     "-configuration_directory", cartographer_config_dir,
                     "-configuration_basename", configuration_basename,
