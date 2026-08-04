@@ -1,7 +1,11 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import (
+    EnvironmentVariable,
+    LaunchConfiguration,
+    PathJoinSubstitution,
+)
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from nav2_common.launch import RewrittenYaml
@@ -24,6 +28,9 @@ def generate_launch_description():
     default_params_file = PathJoinSubstitution(
         [FindPackageShare("grobot_navigation"), "config", "nav2_params.yaml"]
     )
+    default_pbstream_file = PathJoinSubstitution(
+        [EnvironmentVariable("HOME"), "GRobot", "maps", "hotel.pbstream"]
+    )
 
     configured_params = RewrittenYaml(
         source_file=params_file,
@@ -38,7 +45,9 @@ def generate_launch_description():
         DeclareLaunchArgument("use_sim_time", default_value="false"),
         DeclareLaunchArgument("params_file", default_value=default_params_file),
         DeclareLaunchArgument(
-            "pbstream_file", description="Path to .pbstream file for Cartographer localization"
+            "pbstream_file",
+            default_value=default_pbstream_file,
+            description="Path to .pbstream file for Cartographer localization",
         ),
         DeclareLaunchArgument("rviz", default_value="true"),
         DeclareLaunchArgument("robot_radius", default_value="0.26"),
