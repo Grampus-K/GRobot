@@ -29,6 +29,9 @@ def generate_launch_description():
     imu_launch = PathJoinSubstitution(
         [FindPackageShare("grobot_bringup"), "launch", "imu.launch.py"]
     )
+    filter_launch = PathJoinSubstitution(
+        [FindPackageShare("grobot_bringup"), "launch", "laser_filter.launch.py"]
+    )
 
     return LaunchDescription(
         [
@@ -107,6 +110,9 @@ def generate_launch_description():
             ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(imu_launch),
+            ),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(filter_launch),
             ),
         ]
     )
