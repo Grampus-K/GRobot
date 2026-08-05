@@ -214,6 +214,8 @@ controller_server:
             static_layer:
               plugin: "nav2_costmap_2d::StaticLayer"
               map_subscribe_transient_local: True
+              lethal_cost_threshold: 65
+              trinary_costmap: False
             voxel_layer:
               plugin: "nav2_costmap_2d::VoxelLayer"
               enabled: True
@@ -276,6 +278,8 @@ planner_server:
           static_layer:
             plugin: "nav2_costmap_2d::StaticLayer"
             map_subscribe_transient_local: True
+            lethal_cost_threshold: 65
+            trinary_costmap: False
           obstacle_layer:
             plugin: "nav2_costmap_2d::ObstacleLayer"
             enabled: True
