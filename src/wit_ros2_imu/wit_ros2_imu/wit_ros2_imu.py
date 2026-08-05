@@ -390,10 +390,16 @@ class imuDriverNode(Node):
         imuMsg.angular_velocity.y = float(gy)
         imuMsg.angular_velocity.z = float(gz)
 
-        imuMsg.orientation.x = quaternion[0]
-        imuMsg.orientation.y = quaternion[1]
-        imuMsg.orientation.z = quaternion[2]
-        imuMsg.orientation.w = quaternion[3]
+        # 重要：不发布 orientation，避免磁力计解算的绝对 yaw 角
+        # 污染 Cartographer 的位姿外推器（室内磁力计受电机和金属结构干扰严重）。
+        # Cartographer 在 2D 模式下只需要 angular_velocity（用于旋转）
+        # 和 linear_acceleration（用于重力方向对齐），不需要绝对方向。
+        # 将 orientation 置零，Cartographer 会通过
+        # "quaternion is all zeros" 检查并忽略它，仅使用 gyro + accel。
+        imuMsg.orientation.x = 0.0
+        imuMsg.orientation.y = 0.0
+        imuMsg.orientation.z = 0.0
+        imuMsg.orientation.w = 0.0
 
         self.imuPublisher.publish(imuMsg)
 
