@@ -211,10 +211,6 @@ controller_server:
             static_layer:
               plugin: "nav2_costmap_2d::StaticLayer"
               map_subscribe_transient_local: True
-            inflation_layer:
-              plugin: "nav2_costmap_2d::InflationLayer"
-              cost_scaling_factor: 5.0
-              inflation_radius: 0.80
             voxel_layer:
               plugin: "nav2_costmap_2d::VoxelLayer"
               enabled: True
@@ -234,9 +230,10 @@ controller_server:
                 data_type: "LaserScan"
                 obstacle_max_range: 3.0
                 obstacle_min_range: 0.1
-            static_layer:
-              plugin: "nav2_costmap_2d::StaticLayer"
-              map_subscribe_transient_local: True
+            inflation_layer:
+              plugin: "nav2_costmap_2d::InflationLayer"
+              cost_scaling_factor: 5.0
+              inflation_radius: 0.80
             always_send_full_costmap: True
 
 map_saver:
