@@ -8,8 +8,8 @@ options = {
   tracking_frame = "base_link",
   published_frame = "base_link",
   odom_frame = "odom",
-  provide_odom_frame = true,
-  publish_frame_projected_to_2d = false,
+  provide_odom_frame = false,
+  publish_frame_projected_to_2d = true,
   use_odometry = true,
   use_nav_sat = false,
   use_landmarks = false,
@@ -19,7 +19,7 @@ options = {
   num_point_clouds = 0,
   lookup_transform_timeout_sec = 1.0,
   submap_publish_period_sec = 0.3,
-  pose_publish_period_sec = 0.05,
+  pose_publish_period_sec = 0.02,
   trajectory_publish_period_sec = 30e-3,
   rangefinder_sampling_ratio = 1.0,
   odometry_sampling_ratio = 1.0,
@@ -48,7 +48,7 @@ TRAJECTORY_BUILDER_2D.motion_filter.max_distance_meters = 0.1
 TRAJECTORY_BUILDER_2D.motion_filter.max_angle_radians = math.rad(2.)
 TRAJECTORY_BUILDER_2D.motion_filter.max_time_seconds = 0.5
 
--- Ceres 扫描匹配器参数：提高定位模式下的匹配精度
+-- Ceres 扫描匹配器参数
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.occupied_space_weight = 20.0
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 10.0
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 40.0
