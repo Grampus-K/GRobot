@@ -39,6 +39,8 @@ def generate_launch_description():
         ),
     ]
 
+    error_only = ["--ros-args", "--log-level", "ERROR"]
+
     imu_node = Node(
         package="wit_ros2_imu",
         executable="wit_ros2_imu",
@@ -53,6 +55,7 @@ def generate_launch_description():
                 "modbusID": LaunchConfiguration("imu_modbus_id"),
             },
         ],
+        arguments=error_only,
     )
 
     # IMU-based scan distortion corrector
@@ -62,6 +65,7 @@ def generate_launch_description():
         name="imu_scan_corrector",
         output="screen",
         condition=IfCondition(LaunchConfiguration("enable_scan_corrector")),
+        arguments=error_only,
     )
 
     # When corrector is disabled, relay /scan → /scan_corrected so
@@ -72,6 +76,7 @@ def generate_launch_description():
         name="scan_relay",
         output="screen",
         condition=UnlessCondition(LaunchConfiguration("enable_scan_corrector")),
+        arguments=error_only,
     )
 
     return LaunchDescription(declared_arguments + [imu_node, corrector_node, relay_node])

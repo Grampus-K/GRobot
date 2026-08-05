@@ -54,6 +54,8 @@ def generate_launch_description():
         DeclareLaunchArgument("autostart", default_value="true"),
     ]
 
+    error_only = ["--ros-args", "--log-level", "ERROR"]
+
     cartographer_node = Node(
         package="cartographer_ros",
         executable="cartographer_node",
@@ -64,6 +66,7 @@ def generate_launch_description():
             "-configuration_directory", cartographer_config_dir,
             "-configuration_basename", "cartographer_localization.lua",
             "-load_state_filename", pbstream_file,
+            "--ros-args", "--log-level", "ERROR",
         ],
         remappings=[
             ("/scan", "/scan_corrected"),
@@ -81,6 +84,7 @@ def generate_launch_description():
             {"resolution": 0.05},
             {"publish_period_sec": 1.0},
         ],
+        arguments=error_only,
     )
 
     lifecycle_manager = Node(
@@ -101,6 +105,7 @@ def generate_launch_description():
                 "velocity_smoother",
             ],
         }],
+        arguments=error_only,
     )
 
     controller_server = Node(
@@ -109,6 +114,7 @@ def generate_launch_description():
         name="controller_server",
         output="screen",
         parameters=[configured_params],
+        arguments=error_only,
     )
 
     smoother_server = Node(
@@ -117,6 +123,7 @@ def generate_launch_description():
         name="smoother_server",
         output="screen",
         parameters=[configured_params],
+        arguments=error_only,
     )
 
     planner_server = Node(
@@ -125,6 +132,7 @@ def generate_launch_description():
         name="planner_server",
         output="screen",
         parameters=[configured_params],
+        arguments=error_only,
     )
 
     behavior_server = Node(
@@ -133,6 +141,7 @@ def generate_launch_description():
         name="behavior_server",
         output="screen",
         parameters=[configured_params],
+        arguments=error_only,
     )
 
     bt_navigator = Node(
@@ -141,6 +150,7 @@ def generate_launch_description():
         name="bt_navigator",
         output="screen",
         parameters=[configured_params],
+        arguments=error_only,
     )
 
     waypoint_follower = Node(
@@ -149,6 +159,7 @@ def generate_launch_description():
         name="waypoint_follower",
         output="screen",
         parameters=[configured_params],
+        arguments=error_only,
     )
 
     velocity_smoother = Node(
@@ -157,13 +168,14 @@ def generate_launch_description():
         name="velocity_smoother",
         output="screen",
         parameters=[configured_params],
+        arguments=error_only,
     )
 
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
         name="rviz2_navigation",
-        arguments=["-d", rviz_config_file],
+        arguments=["-d", rviz_config_file, "--ros-args", "--log-level", "ERROR"],
         output="screen",
         condition=IfCondition(rviz),
     )

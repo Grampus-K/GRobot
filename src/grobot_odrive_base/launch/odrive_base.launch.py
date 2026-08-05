@@ -17,6 +17,7 @@ def generate_launch_description():
                 name="odrive_base_node",
                 output="screen",
                 parameters=[params_file],
+                arguments=["--ros-args", "--log-level", "ERROR"],
             )
         ]
     )

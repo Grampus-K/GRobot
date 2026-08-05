@@ -90,6 +90,7 @@ def generate_launch_description():
             output="screen",
             emulate_tty=True,
             respawn=True,
+            arguments=["--ros-args", "--log-level", "ERROR"],
             parameters=[{
                 "frame_id": "scan",
                 "is_ethernet": True,

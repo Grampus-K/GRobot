@@ -50,6 +50,7 @@ def generate_launch_description():
                     "-configuration_directory", cartographer_config_dir,
                     "-configuration_basename", configuration_basename,
                     "-load_state_filename", pbstream_file,
+                    "--ros-args", "--log-level", "ERROR",
                 ],
                 remappings=[
                     ("/scan", "/scan_corrected"),
@@ -66,12 +67,13 @@ def generate_launch_description():
                     {"resolution": 0.05},
                     {"publish_period_sec": 1.0},
                 ],
+                arguments=["--ros-args", "--log-level", "ERROR"],
             ),
             Node(
                 package="rviz2",
                 executable="rviz2",
                 name="rviz2_mapping",
-                arguments=["-d", rviz_config_file],
+                arguments=["-d", rviz_config_file, "--ros-args", "--log-level", "ERROR"],
                 output="screen",
                 condition=IfCondition(rviz),
             ),

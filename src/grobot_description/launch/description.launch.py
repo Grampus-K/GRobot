@@ -76,6 +76,7 @@ def generate_launch_description():
                 name="robot_state_publisher",
                 output="screen",
                 parameters=[robot_description],
+                arguments=["--ros-args", "--log-level", "ERROR"],
             )
         ]
     )
