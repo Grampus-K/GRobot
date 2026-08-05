@@ -234,7 +234,8 @@ controller_server:
                 obstacle_min_range: 0.1
             inflation_layer:
               plugin: "nav2_costmap_2d::InflationLayer"
-              cost_scaling_factor: 5.0
+              enabled: True
+              cost_scaling_factor: 3.0
               inflation_radius: 0.80
             always_send_full_costmap: True
 
@@ -287,7 +288,8 @@ planner_server:
               obstacle_min_range: 0.1
           inflation_layer:
             plugin: "nav2_costmap_2d::InflationLayer"
-            cost_scaling_factor: 5.0
+            enabled: True
+            cost_scaling_factor: 3.0
             inflation_radius: 0.80
           always_send_full_costmap: True
 
