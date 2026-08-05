@@ -214,8 +214,8 @@ controller_server:
               map_topic: /map
             inflation_layer:
               plugin: "nav2_costmap_2d::InflationLayer"
-              cost_scaling_factor: 10.0
-              inflation_radius: 0.55
+              cost_scaling_factor: 5.0
+              inflation_radius: 0.80
             voxel_layer:
               plugin: "nav2_costmap_2d::VoxelLayer"
               enabled: True
@@ -289,8 +289,8 @@ planner_server:
               obstacle_min_range: 0.1
           inflation_layer:
             plugin: "nav2_costmap_2d::InflationLayer"
-            cost_scaling_factor: 10.0
-            inflation_radius: 0.55
+            cost_scaling_factor: 5.0
+            inflation_radius: 0.80
           always_send_full_costmap: True
 
 smoother_server:
