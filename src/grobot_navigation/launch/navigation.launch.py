@@ -98,7 +98,7 @@ def generate_launch_description():
         name="map_threshold",
         output="screen",
         parameters=[{
-            "threshold": 65,
+            "threshold": 10,
         }],
         arguments=error_only,
     )
