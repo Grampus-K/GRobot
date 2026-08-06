@@ -139,7 +139,7 @@ controller_server:
           plugin: "nav2_costmap_2d::InflationLayer"
           enabled: True
           cost_scaling_factor: 3.0
-          inflation_radius: 0.80
+          inflation_radius: 0.50
         always_send_full_costmap: True
     # Rotation Shim + MPPI parameters
     FollowPath:
@@ -298,7 +298,7 @@ planner_server:
           plugin: "nav2_costmap_2d::InflationLayer"
           enabled: True
           cost_scaling_factor: 3.0
-          inflation_radius: 0.80
+          inflation_radius: 0.50
         always_send_full_costmap: True
 
 smoother_server:
