@@ -4,9 +4,9 @@ ROS2 Python driver for the hotel robot differential chassis using ODrive v3.6 ov
 
 ## Measured Chassis Parameters
 
-- Wheel diameter: `0.1725 m`
-- Wheel circumference: `0.1725 * pi = 0.542 m`
-- Track width: `0.375 m`
+- Wheel diameter: `0.139 m`
+- Wheel circumference: `0.139 * pi = 0.437 m`
+- Track width: `0.44 m`
 - Left wheel: `axis1`, positive `input_vel` moves forward
 - Right wheel: `axis0`, positive `input_vel` moves backward, so the driver uses a negative command sign
 
