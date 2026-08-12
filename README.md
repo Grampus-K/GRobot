@@ -212,6 +212,31 @@ ros2 launch free_lidar free_lidar_launch.py
 ros2 launch grobot_description description.launch.py
 ```
 
+### AHA 机器 RPLidar 启动
+
+AHA 机器使用 RPLidar，不使用 FREE 雷达。为了衔接原有 Nav2，AHA 雷达启动入口会让 RPLidar 发布 `/scan`，并把 LaserScan 的 `frame_id` 固定为 `scan`，继续复用原有机器人描述中的 `base_link -> scan` TF。
+
+只启动 RPLidar 和必要机器人描述 TF：
+
+```bash
+ros2 launch grobot_bringup aha_lidar.launch.py
+```
+
+启动 AHA 整机本体，也就是 ODrive 底盘、RPLidar 和必要 TF，但不启动建图：
+
+```bash
+ros2 launch grobot_bringup aha_robot.launch.py
+```
+
+常用覆盖参数：
+
+```bash
+ros2 launch grobot_bringup aha_lidar.launch.py serial_port:=/dev/ttyUSB0 serial_baudrate:=1000000 scan_mode:=DenseBoost
+ros2 launch grobot_bringup aha_robot.launch.py serial_port:=/dev/ttyUSB0 serial_baudrate:=1000000 scan_mode:=DenseBoost
+```
+
+不要把 `rplidar_ros` 自带的 `gmapping_launch.py` 当作普通雷达启动入口使用；它会额外启动 gmapping/RViz/临时 TF，容易和 GRobot 原有 Nav2/TF 树混在一起。
+
 常用检查命令：
 
 ```bash
