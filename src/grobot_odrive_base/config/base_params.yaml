@@ -1,18 +1,18 @@
 odrive_base_node:
   ros__parameters:
     # Your measured chassis geometry.
-    wheel_diameter: 0.1725
-    track_width: 0.375
+    wheel_diameter: 0.139
+    track_width: 0.44
 
     # axis1 is left wheel. Positive input_vel drives it forward.
     left_axis: 1
-    left_cmd_sign: 1.0
-    left_feedback_sign: 1.0
+    left_cmd_sign: -1.0
+    left_feedback_sign: -1.0
 
     # axis0 is right wheel. Positive input_vel drives it backward.
     right_axis: 0
-    right_cmd_sign: -1.0
-    right_feedback_sign: -1.0
+    right_cmd_sign: 1.0
+    right_feedback_sign: 1.0
 
     # Conservative software limit for early indoor testing.
     max_wheel_turn_s: 2.0
