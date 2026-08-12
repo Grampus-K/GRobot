@@ -418,10 +418,77 @@ ros2 topic echo /amcl_pose --once
 
 ## Git 同步
 
-Windows 端修改并推送后，Ubuntu 实机端同步：
+当前仓库同时维护两个主要分支：
+
+- `main`：GRobot 主线稳定版本，保留通用底盘、建图和导航能力。
+- `aha`：AHA 实机专用分支，基于 `v1.0.0` 稳定版本创建，包含 AHA 机器新增的软件包和配置。
+
+以后 AHA 机器相关开发默认在 `aha` 分支进行，不直接改 `main`。
+
+### AHA 分支初始化
+
+如果 Ubuntu 实机端已经有旧的 `~/GRobot` 目录，并且里面就是 AHA 工程内容，可以切到远程 `aha` 分支：
 
 ```bash
 cd ~/GRobot
+git fetch origin
+git reset --hard origin/aha
+git switch -c aha --track origin/aha
+```
+
+如果提示本地已经存在 `aha` 分支，则改用：
+
+```bash
+git switch aha
+git reset --hard origin/aha
+```
+
+确认状态：
+
+```bash
+git status
+git branch -vv
+```
+
+正常情况下应该看到：
+
+```text
+On branch aha
+Your branch is up to date with 'origin/aha'.
+nothing to commit, working tree clean
+```
+
+### AHA 日常同步
+
+Windows 端或其他电脑修改并推送到 `aha` 后，Ubuntu 实机端同步：
+
+```bash
+cd ~/GRobot
+git status
+git pull
+colcon build --symlink-install
+source install/setup.bash
+```
+
+在 AHA 分支提交修改：
+
+```bash
+cd ~/GRobot
+git status
+git add <changed-files>
+git commit -m "Describe your change"
+git push
+```
+
+因为本地 `aha` 已经跟踪 `origin/aha`，所以日常可以直接使用 `git pull` 和 `git push`。
+
+### 主线 main 同步
+
+如果是在主线 `main` 分支上工作，Ubuntu 实机端同步：
+
+```bash
+cd ~/GRobot
+git switch main
 git pull origin main
 colcon build --symlink-install
 source install/setup.bash
@@ -432,20 +499,15 @@ source install/setup.bash
 ```bash
 git add maps/hotel_test_map.yaml maps/hotel_test_map.pgm
 git commit -m "Add hotel test map"
-git push origin main
+git push
 ```
 
-多人协作时建议每次修改前先拉取最新代码：
+如果 `main` 上有通用修复需要合并到 AHA 分支：
 
 ```bash
-git pull origin main
-```
-
-修改完成后再提交并推送：
-
-```bash
-git status
-git add <changed-files>
-git commit -m "Describe your change"
-git push origin main
+cd ~/GRobot
+git switch aha
+git fetch origin
+git merge origin/main
+git push
 ```
