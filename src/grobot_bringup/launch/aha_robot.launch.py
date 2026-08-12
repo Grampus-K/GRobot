@@ -76,7 +76,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "lidar_x",
-                default_value="0.18",
+                default_value="0.0",
                 description="Lidar X offset from base_link, meters",
             ),
             DeclareLaunchArgument(
@@ -86,12 +86,12 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "lidar_z",
-                default_value="0.05",
+                default_value="0.47",
                 description="Lidar Z offset from base_link, meters",
             ),
             DeclareLaunchArgument(
                 "lidar_yaw",
-                default_value="0.0",
+                default_value="-1.5708",
                 description="Lidar yaw relative to base_link, radians",
             ),
             IncludeLaunchDescription(

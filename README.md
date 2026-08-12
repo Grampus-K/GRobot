@@ -235,6 +235,12 @@ ros2 launch grobot_bringup aha_lidar.launch.py serial_port:=/dev/ttyUSB0 serial_
 ros2 launch grobot_bringup aha_robot.launch.py serial_port:=/dev/ttyUSB0 serial_baudrate:=1000000 scan_mode:=DenseBoost
 ```
 
+AHA 当前雷达安装 TF 默认值已经写入启动文件：
+
+```text
+lidar_x=0.0, lidar_y=0.0, lidar_z=0.47, lidar_yaw=-1.5708
+```
+
 不要把 `rplidar_ros` 自带的 `gmapping_launch.py` 当作普通雷达启动入口使用；它会额外启动 gmapping/RViz/临时 TF，容易和 GRobot 原有 Nav2/TF 树混在一起。
 
 常用检查命令：
