@@ -64,7 +64,7 @@ POSE_GRAPH.constraint_builder.global_localization_min_score = 0.55
 -- 请按实际地图大小调整（默认 30 米）。
 POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher = {
   linear_search_window = 30.,
-  angular_search_window = math.rad(180.),
+  angular_search_window = math.rad(179.),
   branch_and_bound_depth = 7,
 }
 POSE_GRAPH.global_sampling_ratio = 0.9
