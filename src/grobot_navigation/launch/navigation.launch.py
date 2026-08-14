@@ -103,6 +103,17 @@ def generate_launch_description():
         arguments=error_only,
     )
 
+    # Bridge RViz "2D Pose Estimate" (/initialpose) to Cartographer's
+    # /start_trajectory service, since cartographer_node does not subscribe to
+    # /initialpose directly.
+    initial_pose_relay_node = Node(
+        package="grobot_odrive_base",
+        executable="initial_pose_relay",
+        name="initial_pose_relay",
+        output="screen",
+        arguments=error_only,
+    )
+
     lifecycle_manager = Node(
         package="nav2_lifecycle_manager",
         executable="lifecycle_manager",
@@ -202,6 +213,7 @@ def generate_launch_description():
             cartographer_node,
             occupancy_grid_node,
             map_threshold_node,
+            initial_pose_relay_node,
             lifecycle_manager,
             controller_server,
             smoother_server,

@@ -26,6 +26,7 @@ setup(
             "front_intensity = grobot_odrive_base.front_intensity:main",
             "scan_relay = grobot_odrive_base.scan_relay:main",
             "map_threshold = grobot_odrive_base.map_threshold:main",
+            "initial_pose_relay = grobot_odrive_base.initial_pose_relay:main",
         ],
     },
 )
