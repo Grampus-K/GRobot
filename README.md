@@ -242,6 +242,41 @@ lidar_x=0.0, lidar_y=0.0, lidar_z=0.47, lidar_yaw=-1.5708
 
 不要把 `rplidar_ros` 自带的 `gmapping_launch.py` 当作普通雷达启动入口使用；它会额外启动 gmapping/RViz/临时 TF，容易和 GRobot 原有 Nav2/TF 树混在一起。
 
+### 雷达前方强度测试
+
+如果需要测试玻璃反射强度，可以先启动雷达：
+
+```bash
+ros2 launch grobot_bringup aha_lidar.launch.py
+```
+
+然后运行前方强度监测工具。默认只取雷达正前方 `10 deg` 范围，也就是 `-5 deg ~ +5 deg`：
+
+```bash
+ros2 run grobot_lidar_tools front_intensity_monitor
+```
+
+这个工具会：
+
+- 订阅 `/scan`
+- 发布只保留前方窗口的 `/front_scan`，方便在 RViz 里单独显示
+- 每秒打印前方有效点的距离和强度统计，包括 `min/mean/median/max`
+
+如果要调整角度窗口：
+
+```bash
+ros2 run grobot_lidar_tools front_intensity_monitor --ros-args \
+  -p window_deg:=10.0 \
+  -p center_angle_deg:=0.0 \
+  -p print_rate_hz:=1.0
+```
+
+如果想在 RViz 里看过滤结果，添加 LaserScan 话题：
+
+```text
+/front_scan
+```
+
 常用检查命令：
 
 ```bash
