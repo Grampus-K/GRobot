@@ -2,12 +2,19 @@
 Initial Pose Relay for Cartographer Pure Localization
 
 Cartographer's `cartographer_node` does NOT subscribe to `/initialpose` (the
-topic RViz's "2D Pose Estimate" tool publishes to).  Its initial pose must be
-set through the `/start_trajectory` service instead.
+topic RViz's "2D Pose Estimate" tool publishes to), and with
+`-load_state_filename` it does not reliably auto-start a localization
+trajectory, so the `map -> odom` transform is never published and the `map`
+frame never appears.
 
-This node bridges the two: it subscribes to `/initialpose` and, on each click,
-calls `/start_trajectory` with an empty configuration (reuse the config loaded
-at launch) so Cartographer re-localizes at the clicked pose.
+This node bridges the gap:
+
+1. On startup it fires `/start_trajectory` once (identity pose) to force the
+   localization trajectory to start, so `map -> odom` is published. The global
+   localization configured in cartographer_localization.lua then corrects the
+   identity pose to the robot's true position.
+2. It also subscribes to `/initialpose` so RViz "2D Pose Estimate" can override
+   the pose manually at any time.
 """
 
 import math
@@ -38,24 +45,38 @@ class InitialPoseRelay(Node):
             "Ready. Use RViz '2D Pose Estimate' to set Cartographer's initial pose."
         )
 
+        # Auto-start the localization trajectory after a short delay so
+        # cartographer_node has time to finish loading the pbstream state.
+        self._auto_start_timer = self.create_timer(3.0, self._auto_start)
+
+    def _auto_start(self):
+        self._auto_start_timer.cancel()
+        self.get_logger().info("Auto-starting localization trajectory at map origin ...")
+        self._start_trajectory(initial_pose=None)
+
+    def _start_trajectory(self, initial_pose):
+        req = StartTrajectory.Request()
+        # Empty configuration reuses the config loaded at launch.
+        req.configuration_directory = ""
+        req.configuration_basename = ""
+        req.use_initial_pose = initial_pose is not None
+        if initial_pose is not None:
+            req.initial_pose = initial_pose
+        req.relative_to_trajectory_id = 0
+
+        future = self.client.call_async(req)
+        future.add_done_callback(self._on_start_trajectory_done)
+
     def _on_initial_pose(self, msg: PoseWithCovarianceStamped):
         pose = msg.pose.pose
         q = pose.orientation
         yaw = 2.0 * math.atan2(q.z, q.w)
 
-        req = StartTrajectory.Request()
-        req.configuration_directory = ""
-        req.configuration_basename = ""
-        req.use_initial_pose = True
-        req.initial_pose = pose
-        req.relative_to_trajectory_id = 0
-
         self.get_logger().info(
             f"Setting initial pose: x={pose.position.x:.2f} "
             f"y={pose.position.y:.2f} yaw={yaw:.2f} rad"
         )
-        future = self.client.call_async(req)
-        future.add_done_callback(self._on_start_trajectory_done)
+        self._start_trajectory(initial_pose=pose)
 
     def _on_start_trajectory_done(self, future):
         try:
