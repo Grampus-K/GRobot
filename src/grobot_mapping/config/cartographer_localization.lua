@@ -58,4 +58,16 @@ POSE_GRAPH.optimize_every_n_nodes = 40
 POSE_GRAPH.constraint_builder.min_score = 0.50
 POSE_GRAPH.constraint_builder.global_localization_min_score = 0.55
 
+-- 全局重定位（绑架重定位）：扩大后端分支定界全局扫描匹配的搜索窗口，
+-- 让机器人从地图任意位置启动时，后端能自动在整张地图中找回真实位姿，
+-- 无需手动给初始位姿。linear_search_window 需覆盖地图对角线长度（米），
+-- 请按实际地图大小调整（默认 30 米）。
+POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher = {
+  linear_search_window = 30.,
+  angular_search_window = math.rad(180.),
+  branch_and_bound_depth = 7,
+}
+POSE_GRAPH.global_sampling_ratio = 0.9
+POSE_GRAPH.constraint_builder.sampling_ratio = 0.5
+
 return options
