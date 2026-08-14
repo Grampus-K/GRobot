@@ -51,12 +51,19 @@ class InitialPoseRelay(Node):
         req.relative_to_trajectory_id = 0
 
         self.get_logger().info(
-            "Setting initial pose: x=%.2f y=%.2f yaw=%.2f rad",
-            pose.position.x,
-            pose.position.y,
-            yaw,
+            f"Setting initial pose: x={pose.position.x:.2f} "
+            f"y={pose.position.y:.2f} yaw={yaw:.2f} rad"
         )
-        self.client.call_async(req)
+        future = self.client.call_async(req)
+        future.add_done_callback(self._on_start_trajectory_done)
+
+    def _on_start_trajectory_done(self, future):
+        try:
+            response = future.result()
+        except Exception as exc:
+            self.get_logger().error(f"start_trajectory call failed: {exc}")
+            return
+        self.get_logger().info(f"start_trajectory response: {response}")
 
 
 def main():
