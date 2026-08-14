@@ -250,7 +250,7 @@ lidar_x=0.0, lidar_y=0.0, lidar_z=0.47, lidar_yaw=-1.5708
 ros2 launch grobot_bringup aha_lidar.launch.py
 ```
 
-然后运行前方强度监测工具。默认只取雷达正前方 `10 deg` 范围，也就是 `-5 deg ~ +5 deg`：
+然后运行前方强度监测工具。AHA 当前 `lidar_yaw=-1.5708`，所以机器人正前方对应 `/scan` 里的 `90 deg` 附近。默认只取这个方向前后 `10 deg` 范围，也就是 `85 deg ~ 95 deg`：
 
 ```bash
 ros2 run grobot_lidar_tools front_intensity_monitor
@@ -267,7 +267,7 @@ ros2 run grobot_lidar_tools front_intensity_monitor
 ```bash
 ros2 run grobot_lidar_tools front_intensity_monitor --ros-args \
   -p window_deg:=10.0 \
-  -p center_angle_deg:=0.0 \
+  -p center_angle_deg:=90.0 \
   -p print_rate_hz:=1.0
 ```
 
@@ -276,6 +276,14 @@ ros2 run grobot_lidar_tools front_intensity_monitor --ros-args \
 ```text
 /front_scan
 ```
+
+如果 `/front_scan` 看不到点，先把窗口放大确认角度：
+
+```bash
+ros2 run grobot_lidar_tools front_intensity_monitor --ros-args -p window_deg:=40.0 -p center_angle_deg:=90.0
+```
+
+也可以临时改 `center_angle_deg` 扫不同方向，例如 `0.0`、`90.0`、`180.0`、`-90.0`。
 
 常用检查命令：
 

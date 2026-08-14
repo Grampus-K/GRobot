@@ -18,7 +18,7 @@ class FrontIntensityMonitor(Node):
 
         self.declare_parameter("scan_topic", "/scan")
         self.declare_parameter("filtered_topic", "/front_scan")
-        self.declare_parameter("center_angle_deg", 0.0)
+        self.declare_parameter("center_angle_deg", 90.0)
         self.declare_parameter("window_deg", 10.0)
         self.declare_parameter("print_rate_hz", 1.0)
         self.declare_parameter("publish_filtered_scan", True)
@@ -33,6 +33,7 @@ class FrontIntensityMonitor(Node):
         self.max_points_to_print = max(0, int(self.get_parameter("max_points_to_print").value))
 
         self.last_print_time = self.get_clock().now()
+        self.printed_scan_info = False
         self.filtered_pub = None
         if self.publish_filtered_scan:
             self.filtered_pub = self.create_publisher(LaserScan, self.filtered_topic, qos_profile_sensor_data)
@@ -55,6 +56,20 @@ class FrontIntensityMonitor(Node):
         )
 
     def scan_callback(self, msg: LaserScan) -> None:
+        if not self.printed_scan_info:
+            self.printed_scan_info = True
+            self.get_logger().info(
+                "raw scan frame=%s angle_min=%.2f deg angle_max=%.2f deg angle_increment=%.3f deg points=%d intensities=%d"
+                % (
+                    msg.header.frame_id,
+                    math.degrees(msg.angle_min),
+                    math.degrees(msg.angle_max),
+                    math.degrees(msg.angle_increment),
+                    len(msg.ranges),
+                    len(msg.intensities),
+                )
+            )
+
         front_points, filtered_ranges, filtered_intensities = self.extract_front_points(msg)
 
         if self.filtered_pub is not None:
@@ -100,8 +115,12 @@ class FrontIntensityMonitor(Node):
     def print_summary(self, points: List[Tuple[float, float, float]], msg: LaserScan) -> None:
         if not points:
             self.get_logger().info(
-                "front window %.1f deg: no valid range points, frame=%s"
-                % (math.degrees(self.half_window) * 2.0, msg.header.frame_id)
+                "front window center=%.1f deg width=%.1f deg: no valid range points, frame=%s"
+                % (
+                    math.degrees(self.center_angle),
+                    math.degrees(self.half_window) * 2.0,
+                    msg.header.frame_id,
+                )
             )
             return
 
