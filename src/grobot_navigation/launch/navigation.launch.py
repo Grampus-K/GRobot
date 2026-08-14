@@ -89,6 +89,22 @@ def generate_launch_description():
             {"resolution": 0.05},
             {"publish_period_sec": 1.0},
         ],
+        remappings=[
+            ("/map", "/map_raw"),
+        ],
+        arguments=error_only,
+    )
+
+    # Threshold Cartographer's continuous probability map into binary 0/100
+    # so Nav2 static_layer can recognise all occupied cells as obstacles.
+    map_threshold_node = Node(
+        package="grobot_odrive_base",
+        executable="map_threshold",
+        name="map_threshold",
+        output="screen",
+        parameters=[{
+            "threshold": 10,
+        }],
         arguments=error_only,
     )
 
@@ -190,6 +206,7 @@ def generate_launch_description():
         + [
             cartographer_node,
             occupancy_grid_node,
+            map_threshold_node,
             lifecycle_manager,
             controller_server,
             smoother_server,

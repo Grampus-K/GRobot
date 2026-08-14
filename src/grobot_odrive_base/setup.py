@@ -25,6 +25,7 @@ setup(
             "imu_scan_corrector = grobot_odrive_base.imu_scan_corrector:main",
             "front_intensity = grobot_odrive_base.front_intensity:main",
             "scan_relay = grobot_odrive_base.scan_relay:main",
+            "map_threshold = grobot_odrive_base.map_threshold:main",
         ],
     },
 )
