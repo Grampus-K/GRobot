@@ -51,7 +51,7 @@ TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 40.0
 
 POSE_GRAPH.optimization_problem.huber_scale = 1e2
 POSE_GRAPH.optimization_problem.odometry_translation_weight = 1e6
-POSE_GRAPH.optimization_problem.odometry_rotation_weight = 1e6
+POSE_GRAPH.optimization_problem.odometry_rotation_weight = 1e5
 POSE_GRAPH.optimize_every_n_nodes = 60
 POSE_GRAPH.constraint_builder.min_score = 0.50
 POSE_GRAPH.constraint_builder.global_localization_min_score = 0.55
