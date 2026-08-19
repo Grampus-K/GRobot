@@ -50,10 +50,12 @@ TRAJECTORY_BUILDER_2D.motion_filter.max_time_seconds = 0.2
 
 -- Ceres 扫描匹配器参数
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.occupied_space_weight = 20.0
-TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 10.0
+TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 30.0
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 40.0
 
 POSE_GRAPH.optimization_problem.huber_scale = 1e2
+POSE_GRAPH.optimization_problem.odometry_translation_weight = 1e6
+POSE_GRAPH.optimization_problem.odometry_rotation_weight = 1e6
 POSE_GRAPH.optimize_every_n_nodes = 40
 POSE_GRAPH.constraint_builder.min_score = 0.50
 POSE_GRAPH.constraint_builder.global_localization_min_score = 0.55
