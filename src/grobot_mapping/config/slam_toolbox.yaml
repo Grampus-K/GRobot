@@ -13,7 +13,7 @@ slam_toolbox:
     transform_publish_period: 0.02
     map_update_interval: 2.0
     resolution: 0.03
-    max_laser_range: 20.0
+    max_laser_range: 15.0
     minimum_time_interval: 0.10
     transform_timeout: 0.2
     tf_buffer_duration: 30.0
@@ -41,7 +41,7 @@ slam_toolbox:
 
     correlation_search_space_dimension: 0.5
     correlation_search_space_resolution: 0.005
-    correlation_search_space_smear_deviation: 0.08
+    correlation_search_space_smear_deviation: 0.05
     loop_search_space_dimension: 8.0
     loop_search_space_resolution: 0.03
     loop_search_space_smear_deviation: 0.03
