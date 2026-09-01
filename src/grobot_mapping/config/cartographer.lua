@@ -39,21 +39,21 @@ TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.linear_search_window = 
 TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.angular_search_window = math.rad(30.)
 TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.translation_delta_cost_weight = 50.
 TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.rotation_delta_cost_weight = 1.
-TRAJECTORY_BUILDER_2D.submaps.num_range_data = 50
+TRAJECTORY_BUILDER_2D.submaps.num_range_data = 40
 TRAJECTORY_BUILDER_2D.motion_filter.max_distance_meters = 0.05
 TRAJECTORY_BUILDER_2D.motion_filter.max_angle_radians = math.rad(1.)
 TRAJECTORY_BUILDER_2D.motion_filter.max_time_seconds = 0.2
 
 -- Ceres 扫描匹配器参数
-TRAJECTORY_BUILDER_2D.ceres_scan_matcher.occupied_space_weight = 20.0
-TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 50.0
-TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 40.0
+TRAJECTORY_BUILDER_2D.ceres_scan_matcher.occupied_space_weight = 15.0
+TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 75.0
+TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 50.0
 
 POSE_GRAPH.optimization_problem.huber_scale = 1e2
-POSE_GRAPH.optimization_problem.odometry_translation_weight = 2e3
-POSE_GRAPH.optimization_problem.odometry_rotation_weight = 1e5
-POSE_GRAPH.optimize_every_n_nodes = 40
-POSE_GRAPH.constraint_builder.min_score = 0.60
-POSE_GRAPH.constraint_builder.global_localization_min_score = 0.55
+POSE_GRAPH.optimization_problem.odometry_translation_weight = 2000
+POSE_GRAPH.optimization_problem.odometry_rotation_weight = 2000
+POSE_GRAPH.optimize_every_n_nodes = 30
+POSE_GRAPH.constraint_builder.min_score = 0.70
+POSE_GRAPH.constraint_builder.global_localization_min_score = 0.75
 
 return options
