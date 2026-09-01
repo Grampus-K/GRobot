@@ -41,7 +41,7 @@ TRAJECTORY_BUILDER_2D.use_imu_data = true
 TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true
 TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.linear_search_window = 0.3
 TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.angular_search_window = math.rad(45.)
-TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.translation_delta_cost_weight = 10.
+TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.translation_delta_cost_weight = 50.
 TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.rotation_delta_cost_weight = 1.
 TRAJECTORY_BUILDER_2D.submaps.num_range_data = 80
 TRAJECTORY_BUILDER_2D.motion_filter.max_distance_meters = 0.05
@@ -50,7 +50,7 @@ TRAJECTORY_BUILDER_2D.motion_filter.max_time_seconds = 0.2
 
 -- Ceres 扫描匹配器参数
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.occupied_space_weight = 20.0
-TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 30.0
+TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 50.0
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 40.0
 
 POSE_GRAPH.optimization_problem.huber_scale = 1e2
